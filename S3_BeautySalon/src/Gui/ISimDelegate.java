@@ -1,7 +1,8 @@
 package Gui;
 
-import Simulation.Simulator;
+import OSPABA.Simulation;
+//import Simulation.Simulator;
 
 public interface ISimDelegate {
-    void refresh(Simulator simulator);
+    void refresh(Simulation simulator);
 }

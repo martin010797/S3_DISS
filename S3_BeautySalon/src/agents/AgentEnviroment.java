@@ -12,6 +12,9 @@ public class AgentEnviroment extends Agent
 	{
 		super(id, mySim, parent);
 		init();
+		addOwnMessage(Mc.init);
+		addOwnMessage(Mc.createNewCustomerOnFoot);
+		addOwnMessage(Mc.createNewCustomerOnCar);
 	}
 
 	@Override

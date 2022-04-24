@@ -29,11 +29,28 @@ public class ManagerEnviroment extends Manager
 	//meta! sender="SchedulerOfArrivalsOnFoot", id="22", type="Finish"
 	public void processFinishSchedulerOfArrivalsOnFoot(MessageForm message)
 	{
+		message.setCode(Mc.customerArrived);
+		message.setAddressee(mySim().findAgent(Id.agentModel));
+		notice(message);
 	}
 
 	//meta! sender="SchedulerOfArrivalsOnCar", id="24", type="Finish"
 	public void processFinishSchedulerOfArrivalsOnCar(MessageForm message)
 	{
+		message.setCode(Mc.customerArrived);
+		message.setAddressee(mySim().findAgent(Id.agentModel));
+		notice(message);
+	}
+
+	public void processInit(MessageForm message){
+		//prichody peso
+		MyMessage messageOnFoot = new MyMessage(mySim());
+		messageOnFoot.setAddressee(myAgent().findAssistant(Id.schedulerOfArrivalsOnFoot));
+		startContinualAssistant(messageOnFoot);
+		//prichody autom
+		MyMessage messageOnCar = new MyMessage(mySim());
+		messageOnCar.setAddressee(myAgent().findAssistant(Id.schedulerOfArrivalsOnCar));
+		startContinualAssistant(messageOnCar);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -41,6 +58,10 @@ public class ManagerEnviroment extends Manager
 	{
 		switch (message.code())
 		{
+			case Mc.init:{
+				processInit(message);
+				break;
+			}
 		}
 	}
 

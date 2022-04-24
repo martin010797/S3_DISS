@@ -12,6 +12,7 @@ public class AgentModel extends Agent
 	{
 		super(id, mySim, parent);
 		init();
+		addOwnMessage(Mc.init);
 	}
 
 	@Override
@@ -19,6 +20,10 @@ public class AgentModel extends Agent
 	{
 		super.prepareReplication();
 		// Setup component for the next replication
+		MyMessage message = new MyMessage(mySim());
+		message.setCode(Mc.init);
+		message.setAddressee(this);
+		manager().notice(message);
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

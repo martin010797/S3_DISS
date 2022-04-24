@@ -17,4 +17,7 @@ public class Mc extends IdList
 	//meta! tag="end"
 
 	// 1..1000 range reserved for user
+	public static final int init = 1;
+	public static final int createNewCustomerOnFoot = 2;
+	public static final int createNewCustomerOnCar = 3;
 }

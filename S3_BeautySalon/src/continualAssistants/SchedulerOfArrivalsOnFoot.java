@@ -1,12 +1,16 @@
 package continualAssistants;
 
 import OSPABA.*;
+import OSPRNG.ExponentialRNG;
 import simulation.*;
 import agents.*;
+import simulation.Participants.Customer;
 
 //meta! id="21"
 public class SchedulerOfArrivalsOnFoot extends Scheduler
 {
+	private ExponentialRNG arrivalsGenerator = new ExponentialRNG((double) (3600/5));
+
 	public SchedulerOfArrivalsOnFoot(int id, Simulation mySim, CommonAgent myAgent)
 	{
 		super(id, mySim, myAgent);
@@ -22,6 +26,15 @@ public class SchedulerOfArrivalsOnFoot extends Scheduler
 	//meta! sender="AgentEnviroment", id="22", type="Start"
 	public void processStart(MessageForm message)
 	{
+		message.setCode(Mc.createNewCustomerOnFoot);
+		hold(arrivalsGenerator.sample(), message);
+	}
+
+	public void processCreateNewCustomerOnFoot(MessageForm message){
+		MessageForm copyMessage = message.createCopy();
+		hold(arrivalsGenerator.sample(),copyMessage);
+		((MyMessage) message).setCustomer(new Customer(_mySim.currentTime()));
+		assistantFinished(message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -29,6 +42,10 @@ public class SchedulerOfArrivalsOnFoot extends Scheduler
 	{
 		switch (message.code())
 		{
+			case Mc.createNewCustomerOnFoot:{
+				processCreateNewCustomerOnFoot(message);
+				break;
+			}
 		}
 	}
 

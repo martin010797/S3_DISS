@@ -1,9 +1,11 @@
 package Gui;
 
-import Simulation.BeautySalonSimulator;
+import OSPABA.Simulation;
+//import OSPABA.ISimDelegate;
+/*import Simulation.BeautySalonSimulator;
 import Simulation.Events.Event;
 import Simulation.Simulator;
-import Simulation.TypeOfSimulation;
+import Simulation.TypeOfSimulation;*/
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -11,6 +13,8 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYSeries;
+import simulation.MySimulation;
+import simulation.TypeOfSimulation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,7 +58,7 @@ public class BeautySalonGui implements ISimDelegate{
     private XYSeries lineChartXYSeries;
     private XYSeries lineChartXYSeriesUntil17;
     private JFreeChart lineChart;
-    private BeautySalonSimulator simulator;
+    private MySimulation simulator;
     private String lastStatesValues;
     private String lastCalendar;
     private String lastStats;
@@ -66,7 +70,12 @@ public class BeautySalonGui implements ISimDelegate{
         frame.pack();
         frame.setVisible(true);
 
-        simulator = new BeautySalonSimulator(1,100000000);
+        /*simulator = new BeautySalonSimulator(1,100000000);
+        simulator.setTypeOfSimulation(TypeOfSimulation.OBSERVE);
+        simulator.setDeltaT(400);
+        simulator.setSleepLength(400);
+        simulator.registerDelegate(this);*/
+        simulator = new MySimulation();
         simulator.setTypeOfSimulation(TypeOfSimulation.OBSERVE);
         simulator.setDeltaT(400);
         simulator.setSleepLength(400);
@@ -91,12 +100,13 @@ public class BeautySalonGui implements ISimDelegate{
         startSimulationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (simulator.getTypeOfSimulation() == TypeOfSimulation.MAX_SPEED){
+                //TODO spustanie simulacie bude inak
+                /*if (simulator.getTypeOfSimulation() == TypeOfSimulation.MAX_SPEED){
                     simulator.setNumberOfReplications(Integer.parseInt(numberOfReplicationsTextField.getText()));
                 }
                 if (simulator.getTypeOfSimulation() == TypeOfSimulation.OBSERVE){
                     simulator.setNumberOfReplications(1);
-                }
+                }*/
                 simulator.setDeltaT(Integer.parseInt(deltaTTextField.getText()));
                 simulator.setSleepLength(Integer.parseInt(lengthOfSleepTextField.getText()));
                 fastSimulationRadioButton.setEnabled(false);
@@ -106,14 +116,25 @@ public class BeautySalonGui implements ISimDelegate{
                 simulator.setNumberOfMakeupArtists(Integer.parseInt(numberOfMakeupArtistsTextField.getText()));
                 simulator.setNumberOfReceptionists(Integer.parseInt(numberOfReceptionistsTextField.getText()));
                 if (simulator.getTypeOfSimulation() == TypeOfSimulation.MAX_WITH_CHART){
-                    simulator.setNumberOfReplications(Integer.parseInt(numberOfReplicationsTextField.getText()));
+                    //simulator.setNumberOfReplications(Integer.parseInt(numberOfReplicationsTextField.getText()));
                     statisticsTextPane.setText("");
                     createDatasets();
                     frame.setVisible(true);
-                    simulator.simulate(10);
+                    //TODO
+                    //Vzriesit ako spustat desat krat kvoli grafu
+                    //simulator.simulate(10);
                 }else {
                     simulator.setNumberOfHairstylists(Integer.parseInt(numberOfHairdressersTextField.getText()));
-                    simulator.simulate();
+                    //TODO
+                    //simulator.simulate();
+                    //neviem ako s uknocenim simulacneho behu este. Ci sa deafultne nastavi ovela dlhsi beh a pauzne
+                    // sa niekde v agentoch ked bude cas vacsi ako 17:00 a len sa dobehnu zakaznici ktori su v systeme
+                    //TODO
+                    if (simulator.getTypeOfSimulation() == TypeOfSimulation.OBSERVE){
+                        simulator.simulate(1);
+                    }else {
+                        simulator.simulate(Integer.parseInt(numberOfReplicationsTextField.getText()));
+                    }
                 }
             }
         });
@@ -160,9 +181,10 @@ public class BeautySalonGui implements ISimDelegate{
         pauseSimulationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(simulator.setPaused(true)){
+                //TODO
+                /*if(simulator.setPaused(true)){
                     isPausedLabel.setVisible(true);
-                }
+                }*/
             }
         });
         changeTheSpeedButton.addActionListener(new ActionListener() {
@@ -190,8 +212,10 @@ public class BeautySalonGui implements ISimDelegate{
     }
 
     @Override
-    public void refresh(Simulator simulator) {
-        BeautySalonSimulator sim = (BeautySalonSimulator) simulator;
+    public void refresh(Simulation simulator) {
+        MySimulation sim = (MySimulation) simulator;
+        //TODO
+        /*BeautySalonSimulator sim = (BeautySalonSimulator) simulator;
         TypeOfSimulation typeOfSimulation = sim.getTypeOfSimulation();
         if (typeOfSimulation == TypeOfSimulation.OBSERVE){
             //toto vykresluj iba ak je zapnute sledovanie simulacie
@@ -254,7 +278,7 @@ public class BeautySalonGui implements ISimDelegate{
                 slowSimulationRadioButton.setEnabled(true);
                 chartOutputRadioButton.setEnabled(true);
             }
-        }
+        }*/
     }
 
     public void createDatasets(){

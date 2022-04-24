@@ -1,12 +1,16 @@
 package continualAssistants;
 
 import OSPABA.*;
+import OSPRNG.ExponentialRNG;
 import simulation.*;
 import agents.*;
+import simulation.Participants.Customer;
 
 //meta! id="23"
 public class SchedulerOfArrivalsOnCar extends Scheduler
 {
+	private ExponentialRNG arrivalsGenerator = new ExponentialRNG((double) (3600/8));
+
 	public SchedulerOfArrivalsOnCar(int id, Simulation mySim, CommonAgent myAgent)
 	{
 		super(id, mySim, myAgent);
@@ -22,6 +26,18 @@ public class SchedulerOfArrivalsOnCar extends Scheduler
 	//meta! sender="AgentEnviroment", id="24", type="Start"
 	public void processStart(MessageForm message)
 	{
+		message.setCode(Mc.createNewCustomerOnCar);
+		hold(arrivalsGenerator.sample(),message);
+	}
+
+	public void processCreateNewCustomerOnCar(MessageForm message){
+		MessageForm copyMessage = message.createCopy();
+		hold(arrivalsGenerator.sample(),copyMessage);
+		//TODO mysliet na to ze tento zakaznik musi este parkovat a az potom sa mu pocita cas v systeme
+		Customer customer = new Customer(_mySim.currentTime());
+		customer.setArrivedOnCar(true);
+		((MyMessage) message).setCustomer(new Customer(_mySim.currentTime()));
+		assistantFinished(message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -29,6 +45,10 @@ public class SchedulerOfArrivalsOnCar extends Scheduler
 	{
 		switch (message.code())
 		{
+			case Mc.createNewCustomerOnCar:{
+				processCreateNewCustomerOnCar(message);
+				break;
+			}
 		}
 	}
 

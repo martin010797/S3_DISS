@@ -1,13 +1,37 @@
 package simulation;
 
+import Gui.ISimDelegate;
 import OSPABA.*;
+import OSPStat.Stat;
 import agents.*;
+import simulation.Participants.CurrentPosition;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MySimulation extends Simulation
 {
+	private List<ISimDelegate> delegates;
+	private TypeOfSimulation typeOfSimulation;
+
+	private int deltaT;
+	private int sleepLength;
+	private int numberOfReceptionists;
+	private int numberOfMakeupArtists;
+	private int numberOfHairstylists;
+
+	//globalne statistiky
+	private Stat timeInSystem;
+	private Stat lengthOfQueueReception;
+	private Stat waitTimeForPlacingOrder;
+
 	public MySimulation()
 	{
 		init();
+		delegates = new ArrayList<>();
+		numberOfReceptionists = 0;
+		numberOfHairstylists = 0;
+		numberOfMakeupArtists = 0;
 	}
 
 	@Override
@@ -15,6 +39,9 @@ public class MySimulation extends Simulation
 	{
 		super.prepareSimulation();
 		// Create global statistcis
+		timeInSystem = new Stat();
+		lengthOfQueueReception = new Stat();
+		waitTimeForPlacingOrder = new Stat();
 	}
 
 	@Override
@@ -29,6 +56,9 @@ public class MySimulation extends Simulation
 	{
 		// Collect local statistics into global, update UI, etc...
 		super.replicationFinished();
+		if (typeOfSimulation == TypeOfSimulation.MAX_SPEED){
+			refreshGui();
+		}
 	}
 
 	@Override
@@ -36,6 +66,131 @@ public class MySimulation extends Simulation
 	{
 		// Dysplay simulation results
 		super.simulationFinished();
+		if (typeOfSimulation == TypeOfSimulation.MAX_WITH_CHART){
+			refreshGui();
+		}
+	}
+
+	//TODO mozem hodit sem refresh gui?
+	@Override
+	protected void updateAnimator() {
+		super.updateAnimator();
+		if (typeOfSimulation == TypeOfSimulation.OBSERVE){
+			refreshGui();
+		}
+	}
+
+	private void refreshGui(){
+		for (ISimDelegate delegate : delegates) {
+			delegate.refresh(this);
+		}
+	}
+
+	public void registerDelegate(ISimDelegate delegate){
+		delegates.add(delegate);
+	}
+
+	public String getCurrentTime() {
+		return convertTimeOfSystem(currentTime());
+	}
+
+	public String convertTimeOfSystem(double pTime){
+		int seconds = (int)pTime % 60;
+		int minutes = ((int)pTime / 60) % 60;
+		if (minutes == 59 && seconds == 59){
+			minutes = minutes;
+		}
+		int hours = (9 + (int)pTime / 60 / 60) % 24;
+		String time = "";
+		if (hours < 10){
+			time += "0"+ hours + ":";
+		}else {
+			time += hours + ":";
+		}
+		if (minutes < 10){
+			time += "0"+ minutes + ":";
+		}else {
+			time += minutes + ":";
+		}
+		if (seconds < 10){
+			time += "0"+ seconds;
+		}else {
+			time += seconds;
+		}
+		return time;
+	}
+
+	private String convertCurrentPosition(CurrentPosition currentPosition){
+		switch (currentPosition){
+			case PAYING:{
+				return "Platba";
+			}
+			case ARRIVED:{
+				return "Prichod";
+			}
+			case MAKE_UP:{
+				return "Licenie";
+			}
+			case ORDERING:{
+				return "Zadavanie objednavky";
+			}
+			case HAIR_STYLING:{
+				return "Uprava ucesu";
+			}
+			case CLEANING_SKIN:{
+				return "Cistenie pleti";
+			}
+			case IN_QUEUE_FOR_PAY:{
+				return "Rad platba";
+			}
+			case IN_QUEUE_FOR_MAKEUP:{
+				return "Rad licenie";
+			}
+			case IN_QUEUE_FOR_ORDERING:{
+				return "Rad pre objednavku";
+			}
+			case IN_QUEUE_FOR_HAIRSTYLE:{
+				return "Rad uprava ucesu";
+			}
+			case PARKING:{
+				return "Parkovanie";
+			}
+			default:{
+				return "Nezname";
+			}
+		}
+	}
+
+	public TypeOfSimulation getTypeOfSimulation() {
+		return typeOfSimulation;
+	}
+
+	public void setTypeOfSimulation(TypeOfSimulation typeOfSimulation) {
+		this.typeOfSimulation = typeOfSimulation;
+	}
+
+	public void setDeltaT(int deltaT) {
+		this.deltaT = deltaT;
+	}
+
+	public void setSleepLength(int sleepLength) {
+		this.sleepLength = sleepLength;
+	}
+
+	public void setNumberOfReceptionists(int numberOfReceptionists) {
+		this.numberOfReceptionists = numberOfReceptionists;
+	}
+
+	public void setNumberOfMakeupArtists(int numberOfMakeupArtists) {
+		this.numberOfMakeupArtists = numberOfMakeupArtists;
+	}
+
+	public void setNumberOfHairstylists(int numberOfHairstylists) {
+		this.numberOfHairstylists = numberOfHairstylists;
+	}
+
+	public int getNumberOfHairstylists() {
+		return numberOfHairstylists;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"
