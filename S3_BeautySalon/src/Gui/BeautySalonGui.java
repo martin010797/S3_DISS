@@ -1,7 +1,8 @@
 package Gui;
 
+import OSPABA.SimState;
 import OSPABA.Simulation;
-//import OSPABA.ISimDelegate;
+import OSPABA.ISimDelegate;
 /*import Simulation.BeautySalonSimulator;
 import Simulation.Events.Event;
 import Simulation.Simulator;
@@ -77,6 +78,9 @@ public class BeautySalonGui implements ISimDelegate{
         simulator.registerDelegate(this);*/
         simulator = new MySimulation();
         simulator.setTypeOfSimulation(TypeOfSimulation.OBSERVE);
+        //TODO upravi sa neskor. teraz iba defaultne
+        //simulator.setSimSpeed(50,0.05);
+
         simulator.setDeltaT(400);
         simulator.setSleepLength(400);
         simulator.registerDelegate(this);
@@ -107,45 +111,55 @@ public class BeautySalonGui implements ISimDelegate{
                 if (simulator.getTypeOfSimulation() == TypeOfSimulation.OBSERVE){
                     simulator.setNumberOfReplications(1);
                 }*/
-                simulator.setDeltaT(Integer.parseInt(deltaTTextField.getText()));
-                simulator.setSleepLength(Integer.parseInt(lengthOfSleepTextField.getText()));
-                fastSimulationRadioButton.setEnabled(false);
-                slowSimulationRadioButton.setEnabled(false);
-                chartOutputRadioButton.setEnabled(false);
-                isPausedLabel.setVisible(false);
-                simulator.setNumberOfMakeupArtists(Integer.parseInt(numberOfMakeupArtistsTextField.getText()));
-                simulator.setNumberOfReceptionists(Integer.parseInt(numberOfReceptionistsTextField.getText()));
-                if (simulator.getTypeOfSimulation() == TypeOfSimulation.MAX_WITH_CHART){
-                    //simulator.setNumberOfReplications(Integer.parseInt(numberOfReplicationsTextField.getText()));
-                    statisticsTextPane.setText("");
-                    createDatasets();
-                    frame.setVisible(true);
-                    //TODO
-                    //Vzriesit ako spustat desat krat kvoli grafu
-                    //simulator.simulate(10);
-                }else {
-                    simulator.setNumberOfHairstylists(Integer.parseInt(numberOfHairdressersTextField.getText()));
-                    //TODO
-                    //simulator.simulate();
-                    //neviem ako s uknocenim simulacneho behu este. Ci sa deafultne nastavi ovela dlhsi beh a pauzne
-                    // sa niekde v agentoch ked bude cas vacsi ako 17:00 a len sa dobehnu zakaznici ktori su v systeme
-                    //TODO
-                    if (simulator.getTypeOfSimulation() == TypeOfSimulation.OBSERVE){
-                        simulator.simulate(1);
+                if (!simulator.isRunning() && !simulator.isPaused()){
+                    simulator.setDeltaT(Integer.parseInt(deltaTTextField.getText()));
+                    simulator.setSleepLength(Integer.parseInt(lengthOfSleepTextField.getText()));
+                    fastSimulationRadioButton.setEnabled(false);
+                    slowSimulationRadioButton.setEnabled(false);
+                    chartOutputRadioButton.setEnabled(false);
+                    isPausedLabel.setVisible(false);
+                    simulator.setNumberOfMakeupArtists(Integer.parseInt(numberOfMakeupArtistsTextField.getText()));
+                    simulator.setNumberOfReceptionists(Integer.parseInt(numberOfReceptionistsTextField.getText()));
+                    if (simulator.getTypeOfSimulation() == TypeOfSimulation.MAX_WITH_CHART){
+                        //simulator.setNumberOfReplications(Integer.parseInt(numberOfReplicationsTextField.getText()));
+                        statisticsTextPane.setText("");
+                        createDatasets();
+                        frame.setVisible(true);
+                        //TODO
+                        //Vyriesit ako spustat desat krat kvoli grafu
+                        //simulator.simulate(10);
                     }else {
-                        simulator.simulate(Integer.parseInt(numberOfReplicationsTextField.getText()));
+                        simulator.setNumberOfHairstylists(Integer.parseInt(numberOfHairdressersTextField.getText()));
+                        //TODO
+                        //simulator.simulate();
+                        //neviem ako s uknocenim simulacneho behu este. Ci sa deafultne nastavi ovela dlhsi beh a pauzne
+                        // sa niekde v agentoch ked bude cas vacsi ako 17:00 a len sa dobehnu zakaznici ktori su v systeme
+                        //TODO
+                        if (simulator.getTypeOfSimulation() == TypeOfSimulation.OBSERVE){
+                            //TODO neskor upravit na skutocne hodnoty
+                            simulator.setSimSpeed(50,0.05);
+                            //
+                            simulator.simulateAsync(1);
+                        }else {
+                            simulator.setMaxSimSpeed();
+                            simulator.simulate(Integer.parseInt(numberOfReplicationsTextField.getText()));
+                        }
                     }
+                }else if (simulator.isPaused()){
+                    simulator.resumeSimulation();
                 }
             }
         });
         stopSimulationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                simulator.stopSimulation();
-                fastSimulationRadioButton.setEnabled(true);
-                slowSimulationRadioButton.setEnabled(true);
-                chartOutputRadioButton.setEnabled(true);
-                isPausedLabel.setVisible(false);
+                if (simulator.isRunning()){
+                    simulator.stopSimulation();
+                    fastSimulationRadioButton.setEnabled(true);
+                    slowSimulationRadioButton.setEnabled(true);
+                    chartOutputRadioButton.setEnabled(true);
+                    isPausedLabel.setVisible(false);
+                }
             }
         });
         fastSimulationRadioButton.addActionListener(new ActionListener() {
@@ -161,6 +175,7 @@ public class BeautySalonGui implements ISimDelegate{
                 numberOfHairdressersLabel.setVisible(true);
                 numberOfHairdressersTextField.setVisible(true);
                 simulator.setTypeOfSimulation(TypeOfSimulation.MAX_SPEED);
+                simulator.setMaxSimSpeed();
             }
         });
         slowSimulationRadioButton.addActionListener(new ActionListener() {
@@ -176,11 +191,17 @@ public class BeautySalonGui implements ISimDelegate{
                 numberOfHairdressersLabel.setVisible(true);
                 numberOfHairdressersTextField.setVisible(true);
                 simulator.setTypeOfSimulation(TypeOfSimulation.OBSERVE);
+                //TODO
+                //simulator.setSimSpeed(50,0.05);
             }
         });
         pauseSimulationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (simulator.isRunning()){
+                    simulator.pauseSimulation();
+                    isPausedLabel.setVisible(true);
+                }
                 //TODO
                 /*if(simulator.setPaused(true)){
                     isPausedLabel.setVisible(true);
@@ -207,8 +228,24 @@ public class BeautySalonGui implements ISimDelegate{
                 numberOfHairdressersLabel.setVisible(false);
                 numberOfHairdressersTextField.setVisible(false);
                 simulator.setTypeOfSimulation(TypeOfSimulation.MAX_WITH_CHART);
+                simulator.setMaxSimSpeed();
             }
         });
+    }
+
+    @Override
+    public void simStateChanged(Simulation simulation, SimState simState) {
+        switch (simState){
+            case running:{
+                break;
+            }
+            case stopped:{
+                break;
+            }
+            case paused:{
+                break;
+            }
+        }
     }
 
     @Override

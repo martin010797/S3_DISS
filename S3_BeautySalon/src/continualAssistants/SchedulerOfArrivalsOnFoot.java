@@ -6,14 +6,17 @@ import simulation.*;
 import agents.*;
 import simulation.Participants.Customer;
 
+import java.util.Random;
+
 //meta! id="21"
 public class SchedulerOfArrivalsOnFoot extends Scheduler
 {
-	private ExponentialRNG arrivalsGenerator = new ExponentialRNG((double) (3600/5));
+	//private ExponentialRNG arrivalsGenerator;
 
 	public SchedulerOfArrivalsOnFoot(int id, Simulation mySim, CommonAgent myAgent)
 	{
 		super(id, mySim, myAgent);
+		//arrivalsGenerator = new ExponentialRNG((double) (3600/5), new Random(myAgent().getSeedGenerator().nextInt()));
 	}
 
 	@Override
@@ -27,12 +30,13 @@ public class SchedulerOfArrivalsOnFoot extends Scheduler
 	public void processStart(MessageForm message)
 	{
 		message.setCode(Mc.createNewCustomerOnFoot);
-		hold(arrivalsGenerator.sample(), message);
+		//hold(arrivalsGenerator.sample(), message);
+		hold(myAgent().getFootArrivalsGenerator().sample(), message);
 	}
 
 	public void processCreateNewCustomerOnFoot(MessageForm message){
 		MessageForm copyMessage = message.createCopy();
-		hold(arrivalsGenerator.sample(),copyMessage);
+		hold(myAgent().getFootArrivalsGenerator().sample(),copyMessage);
 		((MyMessage) message).setCustomer(new Customer(_mySim.currentTime()));
 		assistantFinished(message);
 	}

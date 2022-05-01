@@ -4,6 +4,8 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import continualAssistants.*;
+import simulation.Participants.CurrentPosition;
+import simulation.Participants.Customer;
 
 //meta! id="1"
 public class ManagerModel extends Manager
@@ -29,11 +31,36 @@ public class ManagerModel extends Manager
 	//meta! sender="AgentEnviroment", id="65", type="Notice"
 	public void processCustomerArrived(MessageForm message)
 	{
+		if (((MyMessage) message).getCustomer() != null){
+			Customer customer = ((MyMessage) message).getCustomer();
+			//pridanie zakaznika do poctu a do aktualnych zakaznikov v systeme
+			//TODO odkomentuje sa po doplnenia fungovania parkovania
+			/*myAgent().addCustomerToStats();
+			myAgent().getListOfCustomersInSystem().add(customer);
+			if (customer.isArrivedOnCar()){
+				customer.setCurrentPosition(CurrentPosition.PARKING);
+				message.setCode(Mc.parking);
+				message.setAddressee(mySim().findAgent(Id.agentParking));
+				request(message);
+			}else {
+				message.setCode(Mc.serveCustomer);
+				message.setAddressee(mySim().findAgent(Id.agentBeautySalon));
+				request(message);
+			}*/
+			if (!customer.isArrivedOnCar()) {
+				myAgent().addCustomerToStats();
+				myAgent().getListOfCustomersInSystem().add(customer);
+				message.setCode(Mc.serveCustomer);
+				message.setAddressee(mySim().findAgent(Id.agentBeautySalon));
+				request(message);
+			}
+		}
 	}
 
 	//meta! sender="AgentBeautySalon", id="69", type="Response"
 	public void processServeCustomer(MessageForm message)
 	{
+		//TODO
 	}
 
 	//meta! sender="AgentParking", id="66", type="Response"

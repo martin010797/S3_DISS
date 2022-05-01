@@ -5,9 +5,14 @@ import simulation.*;
 import managers.*;
 import continualAssistants.*;
 
+import java.util.Random;
+
 //meta! id="30"
 public class AgentParking extends Agent
 {
+	private Random seedGenerator;
+
+	//TODO parkovanie zapracovat az po rozbehani salonu
 	public AgentParking(int id, Simulation mySim, Agent parent)
 	{
 		super(id, mySim, parent);
@@ -19,6 +24,19 @@ public class AgentParking extends Agent
 	{
 		super.prepareReplication();
 		// Setup component for the next replication
+	}
+
+	public Random getSeedGenerator() {
+		return seedGenerator;
+	}
+
+	public void setSeedGenerator(Random seedGenerator) {
+		this.seedGenerator = seedGenerator;
+		prepareGenerators();
+	}
+
+	private void prepareGenerators(){
+		//TODO
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

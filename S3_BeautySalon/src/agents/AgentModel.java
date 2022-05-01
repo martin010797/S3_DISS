@@ -4,10 +4,18 @@ import OSPABA.*;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
+import simulation.Participants.Customer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //meta! id="1"
 public class AgentModel extends Agent
 {
+	private List<Customer> listOfCustomersInSystem;
+	private int numberOfArrivedCustomers;
+	//TODO evidovat aj kolkym sa nepodarilo zaparkovat a odisli kvoli tomu?
+
 	public AgentModel(int id, Simulation mySim, Agent parent)
 	{
 		super(id, mySim, parent);
@@ -20,10 +28,25 @@ public class AgentModel extends Agent
 	{
 		super.prepareReplication();
 		// Setup component for the next replication
+		listOfCustomersInSystem = new ArrayList<>();
+		numberOfArrivedCustomers = 0;
+
 		MyMessage message = new MyMessage(mySim());
 		message.setCode(Mc.init);
 		message.setAddressee(this);
 		manager().notice(message);
+	}
+
+	public List<Customer> getListOfCustomersInSystem() {
+		return listOfCustomersInSystem;
+	}
+
+	public int getNumberOfArrivedCustomers() {
+		return numberOfArrivedCustomers;
+	}
+
+	public void addCustomerToStats(){
+		numberOfArrivedCustomers++;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

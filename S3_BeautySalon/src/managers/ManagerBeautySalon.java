@@ -34,6 +34,10 @@ public class ManagerBeautySalon extends Manager
 	//meta! sender="AgentModel", id="69", type="Request"
 	public void processServeCustomer(MessageForm message)
 	{
+		myAgent().addArrivedCustomerToStats();
+		message.setCode(Mc.writeOrder);
+		message.setAddressee(mySim().findAgent(Id.agentReceptionist));
+		request(message);
 	}
 
 	//meta! sender="AgentHairstylist", id="73", type="Response"

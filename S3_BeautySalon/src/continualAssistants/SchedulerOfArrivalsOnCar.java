@@ -6,14 +6,17 @@ import simulation.*;
 import agents.*;
 import simulation.Participants.Customer;
 
+import java.util.Random;
+
 //meta! id="23"
 public class SchedulerOfArrivalsOnCar extends Scheduler
 {
-	private ExponentialRNG arrivalsGenerator = new ExponentialRNG((double) (3600/8));
+	//private ExponentialRNG arrivalsGenerator;
 
 	public SchedulerOfArrivalsOnCar(int id, Simulation mySim, CommonAgent myAgent)
 	{
 		super(id, mySim, myAgent);
+		//arrivalsGenerator = new ExponentialRNG((double) (3600/8), new Random(myAgent().getSeedGenerator().nextInt()));
 	}
 
 	@Override
@@ -27,16 +30,17 @@ public class SchedulerOfArrivalsOnCar extends Scheduler
 	public void processStart(MessageForm message)
 	{
 		message.setCode(Mc.createNewCustomerOnCar);
-		hold(arrivalsGenerator.sample(),message);
+		//hold(arrivalsGenerator.sample(),message);
+		hold(myAgent().getCarArrivalsGenerator().sample(),message);
 	}
 
 	public void processCreateNewCustomerOnCar(MessageForm message){
 		MessageForm copyMessage = message.createCopy();
-		hold(arrivalsGenerator.sample(),copyMessage);
+		hold(myAgent().getCarArrivalsGenerator().sample(),copyMessage);
 		//TODO mysliet na to ze tento zakaznik musi este parkovat a az potom sa mu pocita cas v systeme
 		Customer customer = new Customer(_mySim.currentTime());
 		customer.setArrivedOnCar(true);
-		((MyMessage) message).setCustomer(new Customer(_mySim.currentTime()));
+		((MyMessage) message).setCustomer(customer);
 		assistantFinished(message);
 	}
 

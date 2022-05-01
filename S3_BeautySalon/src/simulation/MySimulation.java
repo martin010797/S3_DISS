@@ -1,6 +1,6 @@
 package simulation;
 
-import Gui.ISimDelegate;
+//import Gui.ISimDelegate;
 import OSPABA.*;
 import OSPStat.Stat;
 import agents.*;
@@ -8,6 +8,7 @@ import simulation.Participants.CurrentPosition;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MySimulation extends Simulation
 {
@@ -24,10 +25,20 @@ public class MySimulation extends Simulation
 	private Stat timeInSystem;
 	private Stat lengthOfQueueReception;
 	private Stat waitTimeForPlacingOrder;
+	private Stat timeInSystemUntil17;
+	private Stat lengthOfQueueReceptionUntil17;
+
+	private Random seedGenerator;
 
 	public MySimulation()
 	{
 		init();
+		seedGenerator = new Random();
+		agentHairstylist().setSeedGenerator(seedGenerator);
+		agentEnviroment().setSeedGenerator(seedGenerator);
+		agentMakeUpArtist().setSeedGenerator(seedGenerator);
+		agentParking().setSeedGenerator(seedGenerator);
+		agentReceptionist().setSeedGenerator(seedGenerator);
 		delegates = new ArrayList<>();
 		numberOfReceptionists = 0;
 		numberOfHairstylists = 0;
@@ -42,6 +53,8 @@ public class MySimulation extends Simulation
 		timeInSystem = new Stat();
 		lengthOfQueueReception = new Stat();
 		waitTimeForPlacingOrder = new Stat();
+		timeInSystemUntil17 = new Stat();
+		lengthOfQueueReceptionUntil17 = new Stat();
 	}
 
 	@Override
@@ -49,6 +62,11 @@ public class MySimulation extends Simulation
 	{
 		super.prepareReplication();
 		// Reset entities, queues, local statistics, etc...
+		//TODO upravit aby nastavovalo v konkretnych agentoch!!
+		//agentBeautySalon().setNumberOfReceptionists(numberOfReceptionists);
+		agentReceptionist().setNumberOfReceptionists(numberOfReceptionists);
+		agentBeautySalon().setNumberOfHairstylists(numberOfHairstylists);
+		agentBeautySalon().setNumberOfMakeupArtists(numberOfMakeupArtists);
 	}
 
 	@Override
@@ -57,6 +75,7 @@ public class MySimulation extends Simulation
 		// Collect local statistics into global, update UI, etc...
 		super.replicationFinished();
 		if (typeOfSimulation == TypeOfSimulation.MAX_SPEED){
+			//TODO asi nie je treba
 			refreshGui();
 		}
 	}
@@ -71,14 +90,15 @@ public class MySimulation extends Simulation
 		}
 	}
 
+	//Po prerobeni na delegata z frameworku pouzit lambda funkcie
 	//TODO mozem hodit sem refresh gui?
-	@Override
+	/*@Override
 	protected void updateAnimator() {
 		super.updateAnimator();
 		if (typeOfSimulation == TypeOfSimulation.OBSERVE){
 			refreshGui();
 		}
-	}
+	}*/
 
 	private void refreshGui(){
 		for (ISimDelegate delegate : delegates) {
@@ -86,9 +106,9 @@ public class MySimulation extends Simulation
 		}
 	}
 
-	public void registerDelegate(ISimDelegate delegate){
+	/*public void registerDelegate(ISimDelegate delegate){
 		delegates.add(delegate);
-	}
+	}*/
 
 	public String getCurrentTime() {
 		return convertTimeOfSystem(currentTime());

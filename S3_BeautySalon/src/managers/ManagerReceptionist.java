@@ -34,6 +34,8 @@ public class ManagerReceptionist extends Manager
 	//meta! sender="AgentBeautySalon", id="70", type="Request"
 	public void processWriteOrder(MessageForm message)
 	{
+		//TODO tu potom pokracovat
+
 	}
 
 	//meta! sender="ProcessWritingOrder", id="56", type="Finish"

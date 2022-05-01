@@ -2,25 +2,42 @@
 <ABAsim>
   <Agents>
     <Agent>
-      <SimId>9</SimId>
-      <InternalId>34</InternalId>
-      <Name>AgentReceptionist</Name>
-      <Bounds>957,1074,180,180</Bounds>
-      <Reasoner>ManagerReceptionist</Reasoner>
+      <SimId>10</SimId>
+      <InternalId>35</InternalId>
+      <Name>AgentHairstylist</Name>
+      <Bounds>1389,1102,180,180</Bounds>
+      <Reasoner>ManagerHairstylist</Reasoner>
       <ReasonerBounds>74,25,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
       <Components>
         <Process>
-          <SimId>1009</SimId>
-          <InternalId>57</InternalId>
-          <Name>ProcessPayment</Name>
-          <Bounds>95,82,35,18</Bounds>
+          <SimId>1007</SimId>
+          <InternalId>53</InternalId>
+          <Name>ProcessHairstyle</Name>
+          <Bounds>74,90,35,18</Bounds>
+        </Process>
+      </Components>
+    </Agent>
+    <Agent>
+      <SimId>11</SimId>
+      <InternalId>36</InternalId>
+      <Name>AgentMakeUpArtist</Name>
+      <Bounds>1783,1051,180,180</Bounds>
+      <Reasoner>ManagerMakeUpArtist</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+      <Components>
+        <Process>
+          <SimId>1010</SimId>
+          <InternalId>60</InternalId>
+          <Name>ProcessSkinCleaning</Name>
+          <Bounds>47,90,35,18</Bounds>
         </Process>
         <Process>
-          <SimId>1008</SimId>
-          <InternalId>55</InternalId>
-          <Name>ProcessWritingOrder</Name>
-          <Bounds>31,82,35,18</Bounds>
+          <SimId>1011</SimId>
+          <InternalId>62</InternalId>
+          <Name>ProcessMakeUp</Name>
+          <Bounds>107,87,35,18</Bounds>
         </Process>
       </Components>
     </Agent>
@@ -48,46 +65,6 @@
       </Components>
     </Agent>
     <Agent>
-      <SimId>11</SimId>
-      <InternalId>36</InternalId>
-      <Name>AgentMakeUpArtist</Name>
-      <Bounds>1783,1051,180,180</Bounds>
-      <Reasoner>ManagerMakeUpArtist</Reasoner>
-      <ReasonerBounds>74,25,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
-      <Components>
-        <Process>
-          <SimId>1011</SimId>
-          <InternalId>62</InternalId>
-          <Name>ProcessMakeUp</Name>
-          <Bounds>107,87,35,18</Bounds>
-        </Process>
-        <Process>
-          <SimId>1010</SimId>
-          <InternalId>60</InternalId>
-          <Name>ProcessSkinCleaning</Name>
-          <Bounds>47,90,35,18</Bounds>
-        </Process>
-      </Components>
-    </Agent>
-    <Agent>
-      <SimId>10</SimId>
-      <InternalId>35</InternalId>
-      <Name>AgentHairstylist</Name>
-      <Bounds>1389,1102,180,180</Bounds>
-      <Reasoner>ManagerHairstylist</Reasoner>
-      <ReasonerBounds>74,25,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
-      <Components>
-        <Process>
-          <SimId>1007</SimId>
-          <InternalId>53</InternalId>
-          <Name>ProcessHairstyle</Name>
-          <Bounds>74,90,35,18</Bounds>
-        </Process>
-      </Components>
-    </Agent>
-    <Agent>
       <SimId>7</SimId>
       <InternalId>26</InternalId>
       <Name>AgentBeautySalon</Name>
@@ -106,6 +83,29 @@
       <UsePetriNet>false</UsePetriNet>
     </Agent>
     <Agent>
+      <SimId>9</SimId>
+      <InternalId>34</InternalId>
+      <Name>AgentReceptionist</Name>
+      <Bounds>957,1074,180,180</Bounds>
+      <Reasoner>ManagerReceptionist</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+      <Components>
+        <Process>
+          <SimId>1009</SimId>
+          <InternalId>57</InternalId>
+          <Name>ProcessPayment</Name>
+          <Bounds>95,82,35,18</Bounds>
+        </Process>
+        <Process>
+          <SimId>1008</SimId>
+          <InternalId>55</InternalId>
+          <Name>ProcessWritingOrder</Name>
+          <Bounds>31,82,35,18</Bounds>
+        </Process>
+      </Components>
+    </Agent>
+    <Agent>
       <SimId>2</SimId>
       <InternalId>2</InternalId>
       <Name>AgentEnviroment</Name>
@@ -115,16 +115,16 @@
       <UsePetriNet>false</UsePetriNet>
       <Components>
         <Scheduler>
-          <SimId>1003</SimId>
-          <InternalId>21</InternalId>
-          <Name>SchedulerOfArrivalsOnFoot</Name>
-          <Bounds>37,88,35,13</Bounds>
-        </Scheduler>
-        <Scheduler>
           <SimId>1004</SimId>
           <InternalId>23</InternalId>
           <Name>SchedulerOfArrivalsOnCar</Name>
           <Bounds>102,86,35,13</Bounds>
+        </Scheduler>
+        <Scheduler>
+          <SimId>1003</SimId>
+          <InternalId>21</InternalId>
+          <Name>SchedulerOfArrivalsOnFoot</Name>
+          <Bounds>37,88,35,13</Bounds>
         </Scheduler>
       </Components>
     </Agent>
@@ -293,5 +293,5 @@
       <Destination>62</Destination>
     </Message>
   </Messages>
-  <IID>90</IID>
+  <IID>95</IID>
 </ABAsim>

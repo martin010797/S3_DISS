@@ -11,6 +11,7 @@ public class Customer implements Comparable<Customer>{
     private boolean isPaying;
 
     private boolean arrivedOnCar;
+    private int parkingPosition;
 
     public Customer(double arriveTime){
         this.arriveTime = arriveTime;
@@ -72,6 +73,18 @@ public class Customer implements Comparable<Customer>{
 
     public void setArrivedOnCar(boolean arrivedOnCar) {
         this.arrivedOnCar = arrivedOnCar;
+    }
+
+    public int getParkingPosition() {
+        return parkingPosition;
+    }
+
+    public void setParkingPosition(int parkingPosition) {
+        this.parkingPosition = parkingPosition;
+    }
+
+    public void setArriveTime(double arriveTime) {
+        this.arriveTime = arriveTime;
     }
 
     @Override
