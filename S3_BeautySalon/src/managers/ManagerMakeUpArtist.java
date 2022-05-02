@@ -46,11 +46,23 @@ public class ManagerMakeUpArtist extends Manager
 	{
 	}
 
+	public void processNumberOfCustomersInQueues(MessageForm message){
+		((MyMessage) message).setNumberOfCustomersInMakeUpQueue(myAgent().getMakeupWaitingQueue().size());
+		message.setAddressee(mySim().findAgent(Id.agentBeautySalon));
+		message.setSender(myAgent());
+		call(message);
+	}
+
 	//meta! userInfo="Process messages defined in code", id="0"
 	public void processDefault(MessageForm message)
 	{
 		switch (message.code())
 		{
+			case Mc.numberOfCustomersInQueues:
+			case Mc.numberOfCustomersInQueuesInit: {
+				processNumberOfCustomersInQueues(message);
+				break;
+			}
 		}
 	}
 

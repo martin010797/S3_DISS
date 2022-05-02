@@ -8,10 +8,14 @@ public class MyMessage extends MessageForm
 {
 	private Personnel personnel;
 	private Customer customer;
+	private int numberOfCustomersInHairstyleQueue;
+	private int numberOfCustomersInMakeUpQueue;
 
 	public MyMessage(Simulation sim)
 	{
 		super(sim);
+		numberOfCustomersInMakeUpQueue = -1;
+		numberOfCustomersInHairstyleQueue = -1;
 	}
 
 	public MyMessage(MyMessage original)
@@ -34,6 +38,8 @@ public class MyMessage extends MessageForm
 		// Copy attributes
 		personnel = original.personnel;
 		customer = original.customer;
+		numberOfCustomersInHairstyleQueue = original.numberOfCustomersInHairstyleQueue;
+		numberOfCustomersInMakeUpQueue = original.numberOfCustomersInMakeUpQueue;
 	}
 
 	public Personnel getPersonnel() {
@@ -50,5 +56,21 @@ public class MyMessage extends MessageForm
 
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+
+	public int getNumberOfCustomersInHairstyleQueue() {
+		return numberOfCustomersInHairstyleQueue;
+	}
+
+	public void setNumberOfCustomersInHairstyleQueue(int numberOfCustomersInHairstyleQueue) {
+		this.numberOfCustomersInHairstyleQueue = numberOfCustomersInHairstyleQueue;
+	}
+
+	public int getNumberOfCustomersInMakeUpQueue() {
+		return numberOfCustomersInMakeUpQueue;
+	}
+
+	public void setNumberOfCustomersInMakeUpQueue(int numberOfCustomersInMakeUpQueue) {
+		this.numberOfCustomersInMakeUpQueue = numberOfCustomersInMakeUpQueue;
 	}
 }

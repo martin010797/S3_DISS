@@ -1,5 +1,8 @@
 package simulation.Participants;
 
+import OSPABA.MessageForm;
+import simulation.MyMessage;
+
 public class Customer implements Comparable<Customer>{
     private double arriveTime;
     private CurrentPosition currentPosition;
@@ -12,6 +15,10 @@ public class Customer implements Comparable<Customer>{
 
     private boolean arrivedOnCar;
     private int parkingPosition;
+
+    private MessageForm message;
+    private Personnel chosenPersonnel;
+    private double serviceStartTime;
 
     public Customer(double arriveTime){
         this.arriveTime = arriveTime;
@@ -85,6 +92,30 @@ public class Customer implements Comparable<Customer>{
 
     public void setArriveTime(double arriveTime) {
         this.arriveTime = arriveTime;
+    }
+
+    public MessageForm getMessage() {
+        return message;
+    }
+
+    public void setMessage(MessageForm message) {
+        this.message = message;
+    }
+
+    public Personnel getChosenPersonnel() {
+        return chosenPersonnel;
+    }
+
+    public void setChosenPersonnel(Personnel chosenPersonnel) {
+        this.chosenPersonnel = chosenPersonnel;
+    }
+
+    public double getServiceStartTime() {
+        return serviceStartTime;
+    }
+
+    public void setServiceStartTime(double serviceStartTime) {
+        this.serviceStartTime = serviceStartTime;
     }
 
     @Override

@@ -20,4 +20,8 @@ public class Mc extends IdList
 	public static final int init = 1;
 	public static final int createNewCustomerOnFoot = 2;
 	public static final int createNewCustomerOnCar = 3;
+	public static final int orderingProcessFinished = 4;
+	public static final int paymentProcessFinished = 5;
+	public static final int numberOfCustomersInQueues = 6;
+	public static final int numberOfCustomersInQueuesInit = 7;
 }

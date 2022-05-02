@@ -60,13 +60,14 @@ public class MySimulation extends Simulation
 	@Override
 	public void prepareReplication()
 	{
-		super.prepareReplication();
-		// Reset entities, queues, local statistics, etc...
-		//TODO upravit aby nastavovalo v konkretnych agentoch!!
 		//agentBeautySalon().setNumberOfReceptionists(numberOfReceptionists);
 		agentReceptionist().setNumberOfReceptionists(numberOfReceptionists);
-		agentBeautySalon().setNumberOfHairstylists(numberOfHairstylists);
-		agentBeautySalon().setNumberOfMakeupArtists(numberOfMakeupArtists);
+		//agentBeautySalon().setNumberOfHairstylists(numberOfHairstylists);
+		agentHairstylist().setNumberOfHairstylists(numberOfHairstylists);
+		//agentBeautySalon().setNumberOfMakeupArtists(numberOfMakeupArtists);
+		agentMakeUpArtist().setNumberOfMakeupArtists(numberOfMakeupArtists);
+		super.prepareReplication();
+		// Reset entities, queues, local statistics, etc...
 	}
 
 	@Override

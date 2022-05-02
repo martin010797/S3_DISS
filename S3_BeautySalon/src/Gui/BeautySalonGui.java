@@ -134,7 +134,6 @@ public class BeautySalonGui implements ISimDelegate{
                         //simulator.simulate();
                         //neviem ako s uknocenim simulacneho behu este. Ci sa deafultne nastavi ovela dlhsi beh a pauzne
                         // sa niekde v agentoch ked bude cas vacsi ako 17:00 a len sa dobehnu zakaznici ktori su v systeme
-                        //TODO
                         if (simulator.getTypeOfSimulation() == TypeOfSimulation.OBSERVE){
                             //TODO neskor upravit na skutocne hodnoty
                             simulator.setSimSpeed(50,0.05);

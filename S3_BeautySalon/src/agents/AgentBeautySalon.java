@@ -4,6 +4,7 @@ import OSPABA.*;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
+import simulation.Participants.Customer;
 import simulation.Participants.Hairstylist;
 import simulation.Participants.MakeUpArtist;
 import simulation.Participants.Receptionist;
@@ -15,25 +16,33 @@ import java.util.List;
 public class AgentBeautySalon extends Agent
 {
 	//TODO toot vsetko sa asi popresuva do konkretnych agentov
-	private List<Hairstylist> listOfHairStylists;
-	private List<MakeUpArtist> listOfMakeupArtists;
+	//private List<Hairstylist> listOfHairStylists;
+	//private List<MakeUpArtist> listOfMakeupArtists;
 	/*private List<Receptionist> listOfReceptionists;
 	private int numberOfReceptionists;*/
-	private int numberOfMakeupArtists;
-	private int numberOfHairstylists;
+	//private int numberOfMakeupArtists;
+	//private int numberOfHairstylists;
 
 	private int numberOfArrivedCustomers;
 	private int numberOfServedCustomers;
 	private int numberOfServedCustomersUntil17;
 	private int numberOfLeavingCustomers;
 
+	private List<Customer> listOfCustomersInSalon;
+
+	private MessageForm processedMessage;
+
 	public AgentBeautySalon(int id, Simulation mySim, Agent parent)
 	{
 		super(id, mySim, parent);
 		init();
-		listOfHairStylists = new ArrayList<>();
-		listOfMakeupArtists = new ArrayList<>();
+		//listOfHairStylists = new ArrayList<>();
+		//listOfMakeupArtists = new ArrayList<>();
 		//listOfReceptionists = new ArrayList<>();
+		listOfCustomersInSalon = new ArrayList<>();
+
+		addOwnMessage(Mc.numberOfCustomersInQueues);
+		addOwnMessage(Mc.numberOfCustomersInQueuesInit);
 	}
 
 	@Override
@@ -50,20 +59,20 @@ public class AgentBeautySalon extends Agent
 
 	private void addPersonnel(){
 		//listOfReceptionists.clear();
-		listOfHairStylists.clear();
-		listOfMakeupArtists.clear();
+		//listOfHairStylists.clear();
+		//listOfMakeupArtists.clear();
 		/*for (int i = 0; i < numberOfReceptionists; i++){
 			Receptionist receptionist = new Receptionist();
 			listOfReceptionists.add(receptionist);
 		}*/
-		for (int i = 0; i < numberOfMakeupArtists; i++){
+		/*for (int i = 0; i < numberOfMakeupArtists; i++){
 			MakeUpArtist makeUpArtist = new MakeUpArtist();
 			listOfMakeupArtists.add(makeUpArtist);
-		}
-		for (int i = 0; i < numberOfHairstylists; i++){
+		}*/
+		/*for (int i = 0; i < numberOfHairstylists; i++){
 			Hairstylist hairstylist = new Hairstylist();
 			listOfHairStylists.add(hairstylist);
-		}
+		}*/
 	}
 
 	/*public int getNumberOfReceptionists() {
@@ -74,21 +83,21 @@ public class AgentBeautySalon extends Agent
 		this.numberOfReceptionists = numberOfReceptionists;
 	}*/
 
-	public int getNumberOfMakeupArtists() {
+	/*public int getNumberOfMakeupArtists() {
 		return numberOfMakeupArtists;
 	}
 
 	public void setNumberOfMakeupArtists(int numberOfMakeupArtists) {
 		this.numberOfMakeupArtists = numberOfMakeupArtists;
-	}
+	}*/
 
-	public int getNumberOfHairstylists() {
+	/*public int getNumberOfHairstylists() {
 		return numberOfHairstylists;
 	}
 
 	public void setNumberOfHairstylists(int numberOfHairstylists) {
 		this.numberOfHairstylists = numberOfHairstylists;
-	}
+	}*/
 
 	public int getNumberOfArrivedCustomers() {
 		return numberOfArrivedCustomers;
@@ -110,6 +119,10 @@ public class AgentBeautySalon extends Agent
 		numberOfArrivedCustomers++;
 	}
 
+	public List<Customer> getListOfCustomersInSalon() {
+		return listOfCustomersInSalon;
+	}
+
 	public void addServedCustomerToStats(){
 		numberOfServedCustomers++;
 	}
@@ -120,6 +133,14 @@ public class AgentBeautySalon extends Agent
 
 	public void addLeavingCustomerToStats(){
 		numberOfLeavingCustomers++;
+	}
+
+	public MessageForm getProcessedMessage() {
+		return processedMessage;
+	}
+
+	public void setProcessedMessage(MessageForm processedMessage) {
+		this.processedMessage = processedMessage;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

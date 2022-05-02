@@ -19,33 +19,38 @@ import java.util.*;
 //meta! id="34"
 public class AgentReceptionist extends Agent
 {
-	//TODO pridat generatory(nejak premysliet aj seed) asi by sa mohol do kazdeho agenta vlozit Random() co by bol
-	//seed generator. Nastavil by sa v mySimulation po inite pre vsetkych agentov(alebo tych ktory budu nieco generovat)
-	//pokial by nebolo potrebne priorineho frontu ale iba frontu tak sa moze pouzit SimQueue<> a nebolo by potrebne
-	// rucne zbieranie statistik do wstat
-	private PriorityQueue<Customer> receptionWaitingQueue;
 
+	//statistiky
 	private WStat lengthOfReceptionQueue;
+	//TODO s tymto zatial nic neriesime. Asi sa ani nepouzije. Bude sa posielat sprava o zatvaracke kde sa potom zoberu stats
 	private WStat lengthOfReceptionQueueUntil17;
 	private Stat waitTimeForPlacingOrder;
 
-	private List<Receptionist> listOfReceptionists;
-	private int numberOfReceptionists;
-
-	//TODO
 	private Random seedGenerator;
-
 	//generatory
 	private UniformContinuousRNG lengthOfOrderingGenerator;
 	private UniformContinuousRNG lengthOfPaymentGenerator;
 	//pre rozhodovanie ktore sluzby chce
 	private Random hairstyleMakeupServicesGenerator;
+	private Random cleaningChoiceGenerator;
+
+	private List<Receptionist> listOfReceptionists;
+	private int numberOfReceptionists;
+	private boolean isSomeReceptionistFree;
+	//pokial by nebolo potrebne priorineho frontu ale iba frontu tak sa moze pouzit SimQueue<> a nebolo by potrebne
+	// rucne zbieranie statistik do wstat
+	private PriorityQueue<Customer> receptionWaitingQueue;
+
+	private int numberOfStartedOrders;
 
 	public AgentReceptionist(int id, Simulation mySim, Agent parent)
 	{
 		super(id, mySim, parent);
 		init();
 		listOfReceptionists = new ArrayList<>();
+		addOwnMessage(Mc.orderingProcessFinished);
+		addOwnMessage(Mc.paymentProcessFinished);
+		addOwnMessage(Mc.numberOfCustomersInQueues);
 	}
 
 	@Override
@@ -58,6 +63,12 @@ public class AgentReceptionist extends Agent
 		lengthOfReceptionQueue = new WStat(mySim());
 		lengthOfReceptionQueueUntil17 = new WStat(mySim());
 		waitTimeForPlacingOrder = new Stat();
+		if (numberOfReceptionists > 0){
+			isSomeReceptionistFree = true;
+		}else {
+			isSomeReceptionistFree = false;
+		}
+		numberOfStartedOrders = 0;
 	}
 
 	private void addReceptionists(){
@@ -113,10 +124,35 @@ public class AgentReceptionist extends Agent
 		return hairstyleMakeupServicesGenerator;
 	}
 
+	public Random getCleaningChoiceGenerator() {
+		return cleaningChoiceGenerator;
+	}
+
 	private void prepareGenerators(){
 		lengthOfOrderingGenerator = new UniformContinuousRNG(-120.0,120.0,new Random(seedGenerator.nextInt()));
 		lengthOfPaymentGenerator = new UniformContinuousRNG(-50.0,50.0, new Random(seedGenerator.nextInt()));
 		hairstyleMakeupServicesGenerator = new Random(seedGenerator.nextInt());
+		cleaningChoiceGenerator = new Random(seedGenerator.nextInt());
+	}
+
+	public List<Receptionist> getListOfReceptionists() {
+		return listOfReceptionists;
+	}
+
+	public boolean isSomeReceptionistFree() {
+		return isSomeReceptionistFree;
+	}
+
+	public void setSomeReceptionistFree(boolean someReceptionistFree) {
+		isSomeReceptionistFree = someReceptionistFree;
+	}
+
+	public int getNumberOfStartedOrders() {
+		return numberOfStartedOrders;
+	}
+
+	public void addToNumberOfStartedOrders() {
+		this.numberOfStartedOrders++;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

@@ -37,7 +37,13 @@ public class ManagerBeautySalon extends Manager
 		myAgent().addArrivedCustomerToStats();
 		message.setCode(Mc.writeOrder);
 		message.setAddressee(mySim().findAgent(Id.agentReceptionist));
-		request(message);
+		myAgent().setProcessedMessage(message);
+		//zistovanie poctu zakaznikov vo frontoch
+		MyMessage m = new MyMessage(mySim());
+		m.setCode(Mc.numberOfCustomersInQueuesInit);
+		m.setAddressee(mySim().findAgent(Id.agentHairstylist));
+		call(m);
+		//request(message);
 	}
 
 	//meta! sender="AgentHairstylist", id="73", type="Response"
@@ -60,11 +66,79 @@ public class ManagerBeautySalon extends Manager
 	{
 	}
 
+	public void processNumberOfCustomersInQueueForReception(MessageForm message){
+		message.setAddressee(mySim().findAgent(Id.agentHairstylist));
+		call(message);
+	}
+
+	public void processNumberOfCustomersInQueueForHairstylist(MessageForm message){
+		message.setAddressee(mySim().findAgent(Id.agentMakeUpArtist));
+		call(message);
+	}
+
+	public void processNumberOfCustomersInQueueForMakeUpArtis(MessageForm message){
+		message.setAddressee(mySim().findAgent(Id.agentReceptionist));
+		call(message);
+	}
+
+	public void processNumberOfCustomersInQueueForHairstylistInit(MessageForm message){
+		if (myAgent().getProcessedMessage() != null){
+			//nastavim sprave pocet ludi v rade pred upravovou vlasov
+			((MyMessage) myAgent().getProcessedMessage()).setNumberOfCustomersInHairstyleQueue(
+					((MyMessage) message).getNumberOfCustomersInHairstyleQueue()
+			);
+			//zistim druhu dlzku radu
+			message.setAddressee(mySim().findAgent(Id.agentMakeUpArtist));
+			call(message);
+		}
+	}
+
+	public void processNumberOfCustomersInQueueForMakeUpArtisInit(MessageForm message){
+		if (myAgent().getProcessedMessage() != null){
+			//nastavim sprave pocet ludi v rade pred makeupom
+			((MyMessage) myAgent().getProcessedMessage()).setNumberOfCustomersInMakeUpQueue(
+					((MyMessage) message).getNumberOfCustomersInMakeUpQueue()
+			);
+			//viem obidve dlzky radov tak mozem posielat request pre recepciu
+			MessageForm m = myAgent().getProcessedMessage();
+			request(m);
+			myAgent().setProcessedMessage(null);
+		}
+	}
+
 	//meta! userInfo="Process messages defined in code", id="0"
 	public void processDefault(MessageForm message)
 	{
 		switch (message.code())
 		{
+			case Mc.numberOfCustomersInQueues: {
+				switch (message.sender().id())
+				{
+					case Id.agentReceptionist:
+						processNumberOfCustomersInQueueForReception(message);
+						break;
+
+					case Id.agentHairstylist:
+						processNumberOfCustomersInQueueForHairstylist(message);
+						break;
+					case Id.agentMakeUpArtist:
+						processNumberOfCustomersInQueueForMakeUpArtis(message);
+						break;
+				}
+				break;
+			}
+			case Mc.numberOfCustomersInQueuesInit:{
+				switch (message.sender().id())
+				{
+					case Id.agentHairstylist:
+						processNumberOfCustomersInQueueForHairstylistInit(message);
+						break;
+					case Id.agentMakeUpArtist:
+						processNumberOfCustomersInQueueForMakeUpArtisInit(message);
+						break;
+				}
+				break;
+			}
 		}
 	}
 
