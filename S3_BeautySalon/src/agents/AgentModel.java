@@ -14,7 +14,7 @@ public class AgentModel extends Agent
 {
 	private List<Customer> listOfCustomersInSystem;
 	private int numberOfArrivedCustomers;
-	//TODO evidovat aj kolkym sa nepodarilo zaparkovat a odisli kvoli tomu?
+	//TODO evidovat aj kolkym sa nepodarilo zaparkovat a odisli kvoli tomu
 
 	public AgentModel(int id, Simulation mySim, Agent parent)
 	{

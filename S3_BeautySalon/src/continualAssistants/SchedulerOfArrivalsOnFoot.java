@@ -35,8 +35,12 @@ public class SchedulerOfArrivalsOnFoot extends Scheduler
 	}
 
 	public void processCreateNewCustomerOnFoot(MessageForm message){
-		MessageForm copyMessage = message.createCopy();
-		hold(myAgent().getFootArrivalsGenerator().sample(),copyMessage);
+		double lengthOfHold = myAgent().getFootArrivalsGenerator().sample();
+		//aby planovalo dalsie prichody len do 17:00
+		if ((lengthOfHold + mySim().currentTime()) <= 28800){
+			MessageForm copyMessage = message.createCopy();
+			hold(lengthOfHold,copyMessage);
+		}
 		((MyMessage) message).setCustomer(new Customer(_mySim.currentTime()));
 		assistantFinished(message);
 	}

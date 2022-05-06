@@ -15,7 +15,6 @@ import java.util.List;
 //meta! id="26"
 public class AgentBeautySalon extends Agent
 {
-	//TODO toot vsetko sa asi popresuva do konkretnych agentov
 	//private List<Hairstylist> listOfHairStylists;
 	//private List<MakeUpArtist> listOfMakeupArtists;
 	/*private List<Receptionist> listOfReceptionists;

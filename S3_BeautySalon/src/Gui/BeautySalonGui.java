@@ -78,8 +78,6 @@ public class BeautySalonGui implements ISimDelegate{
         simulator.registerDelegate(this);*/
         simulator = new MySimulation();
         simulator.setTypeOfSimulation(TypeOfSimulation.OBSERVE);
-        //TODO upravi sa neskor. teraz iba defaultne
-        //simulator.setSimSpeed(50,0.05);
 
         simulator.setDeltaT(400);
         simulator.setSleepLength(400);
@@ -104,7 +102,7 @@ public class BeautySalonGui implements ISimDelegate{
         startSimulationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO spustanie simulacie bude inak
+                //TODO spustanie simulacie bude neskor inak
                 /*if (simulator.getTypeOfSimulation() == TypeOfSimulation.MAX_SPEED){
                     simulator.setNumberOfReplications(Integer.parseInt(numberOfReplicationsTextField.getText()));
                 }
@@ -135,7 +133,7 @@ public class BeautySalonGui implements ISimDelegate{
                         //neviem ako s uknocenim simulacneho behu este. Ci sa deafultne nastavi ovela dlhsi beh a pauzne
                         // sa niekde v agentoch ked bude cas vacsi ako 17:00 a len sa dobehnu zakaznici ktori su v systeme
                         if (simulator.getTypeOfSimulation() == TypeOfSimulation.OBSERVE){
-                            //TODO neskor upravit na skutocne hodnoty
+                            //TODO neskor upravit na skutocne zadavane hodnoty
                             simulator.setSimSpeed(50,0.05);
                             //
                             simulator.simulateAsync(1);

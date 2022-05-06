@@ -4,6 +4,7 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import continualAssistants.*;
+import simulation.Participants.Customer;
 
 //meta! id="26"
 public class ManagerBeautySalon extends Manager
@@ -29,12 +30,23 @@ public class ManagerBeautySalon extends Manager
 	//meta! sender="AgentReceptionist", id="71", type="Response"
 	public void processPayment(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		myAgent().getListOfCustomersInSalon().remove(customer);
+		//stats
+		myAgent().addServedCustomerToStats();
+		//TODO este sa uvidi ako sa spravia nakoniec statistiky do 17:00(mozno vytvorenie procesu)
+		if (mySim().currentTime() <= 28800){
+			myAgent().addServedCustomerUntil17ToStats();
+		}
+		message.setCode(Mc.serveCustomer);
+		response(message);
 	}
 
 	//meta! sender="AgentModel", id="69", type="Request"
 	public void processServeCustomer(MessageForm message)
 	{
 		myAgent().addArrivedCustomerToStats();
+		myAgent().getListOfCustomersInSalon().add(((MyMessage) message).getCustomer());
 		message.setCode(Mc.writeOrder);
 		message.setAddressee(mySim().findAgent(Id.agentReceptionist));
 		myAgent().setProcessedMessage(message);
@@ -49,21 +61,73 @@ public class ManagerBeautySalon extends Manager
 	//meta! sender="AgentHairstylist", id="73", type="Response"
 	public void processHairstyling(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		if (customer.isCleaning()){
+			//chce aj cistenie pleti
+			message.setCode(Mc.skinCleaning);
+			message.setAddressee(mySim().findAgent(Id.agentMakeUpArtist));
+		}else if (customer.isMakeup()){
+			//chce iba makeup
+			message.setCode(Mc.makeUp);
+			message.setAddressee(mySim().findAgent(Id.agentMakeUpArtist));
+		}else {
+			//chcel iba uces a ide platit
+			customer.setPaying(true);
+			message.setCode(Mc.payment);
+			message.setAddressee(mySim().findAgent(Id.agentReceptionist));
+		}
+		request(message);
 	}
 
 	//meta! sender="AgentMakeUpArtist", id="79", type="Response"
 	public void processMakeUp(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		//zakaznik ide platit
+		customer.setPaying(true);
+		message.setCode(Mc.payment);
+		message.setAddressee(mySim().findAgent(Id.agentReceptionist));
+		request(message);
 	}
 
 	//meta! sender="AgentReceptionist", id="70", type="Response"
 	public void processWriteOrder(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		//TODO mozno takto by sa mohli poslat ti ktori budu musiet odist z radu po 17:00(mali by vsetky sluzby na false)
+		//nakoniec sa bude asi aj tak musiet pridat dalsi bool atr pre to lebo agent model by neodlisil od dokoncenych
+		//if (!customer.isHairstyle() && !customer.isCleaning() && !customer.isMakeup())
+
+		//poslania spravy pre spravnu sluzbu
+		if (customer.isHairstyle()){
+			//chce uces
+			message.setCode(Mc.hairstyling);
+			message.setAddressee(mySim().findAgent(Id.agentHairstylist));
+			request(message);
+		}else {
+			//nechce uces to znamena ze urcite chce aspon licenie
+			message.setAddressee(mySim().findAgent(Id.agentMakeUpArtist));
+			if (customer.isCleaning()){
+				//chce aj cistenie a to sa vykonava pred licenim
+				message.setCode(Mc.skinCleaning);
+			}else {
+				//chce iba licenie bez cistenia
+				message.setCode(Mc.makeUp);
+			}
+			request(message);
+		}
 	}
 
 	//meta! sender="AgentMakeUpArtist", id="75", type="Response"
 	public void processSkinCleaning(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		//malo by platit vzdy ze chce licenie po cisteni pleti
+		if (customer.isMakeup()){
+			message.setCode(Mc.makeUp);
+			message.setAddressee(mySim().findAgent(Id.agentMakeUpArtist));
+			request(message);
+		}
 	}
 
 	public void processNumberOfCustomersInQueueForReception(MessageForm message){

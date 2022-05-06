@@ -136,10 +136,10 @@ public class ManagerReceptionist extends Manager
 		planNextWritingOrderOrPayment();
 	}
 
+	//TODO toto by sa mozno mohlo volat zakazdym ked pride NOVA sprava ale neviem ako to bude so synchronizaciou
 	public void planNextWritingOrderOrPayment(){
 		//planovanie dalsieho vybavovania objednavky/platby
 		//pokial je niekto v rade pred recepciou nech si ho priradi niekto z recepcie
-		//TODO pokracovat tu
 		if (!myAgent().getReceptionWaitingQueue().isEmpty()){
 			if (myAgent().getReceptionWaitingQueue().peek().isPaying()){
 				//ak je platiaci zakaznik tak sa vytvori zaciatok platby
@@ -150,7 +150,6 @@ public class ManagerReceptionist extends Manager
 				processPayment(message);
 			}else {
 				//ak nie je platiaci(chce spisat objednavku) tak musi overit ci je kapacita radov mensia ako 11
-				//TODO vyriesit posielanie sprav pre overenie poctu v radoch
 				//riesnie cez call spravy
 				MyMessage message = new MyMessage(mySim());
 				message.setCode(Mc.numberOfCustomersInQueues);

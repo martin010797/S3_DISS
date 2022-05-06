@@ -76,7 +76,6 @@ public class MySimulation extends Simulation
 		// Collect local statistics into global, update UI, etc...
 		super.replicationFinished();
 		if (typeOfSimulation == TypeOfSimulation.MAX_SPEED){
-			//TODO asi nie je treba
 			refreshGui();
 		}
 	}
@@ -90,16 +89,6 @@ public class MySimulation extends Simulation
 			refreshGui();
 		}
 	}
-
-	//Po prerobeni na delegata z frameworku pouzit lambda funkcie
-	//TODO mozem hodit sem refresh gui?
-	/*@Override
-	protected void updateAnimator() {
-		super.updateAnimator();
-		if (typeOfSimulation == TypeOfSimulation.OBSERVE){
-			refreshGui();
-		}
-	}*/
 
 	private void refreshGui(){
 		for (ISimDelegate delegate : delegates) {

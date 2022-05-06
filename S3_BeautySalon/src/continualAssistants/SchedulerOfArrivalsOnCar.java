@@ -35,8 +35,14 @@ public class SchedulerOfArrivalsOnCar extends Scheduler
 	}
 
 	public void processCreateNewCustomerOnCar(MessageForm message){
-		MessageForm copyMessage = message.createCopy();
-		hold(myAgent().getCarArrivalsGenerator().sample(),copyMessage);
+		double lengthOfHold = myAgent().getCarArrivalsGenerator().sample();
+		//aby planovalo dalsie prichody len do 17:00
+		if ((lengthOfHold + mySim().currentTime()) <= 28800){
+			//MessageForm copyMessage = message.createCopy();
+			//hold(lengthOfHold,copyMessage);
+			MessageForm copyMessage = message.createCopy();
+			hold(myAgent().getCarArrivalsGenerator().sample(),copyMessage);
+		}
 		//TODO mysliet na to ze tento zakaznik musi este parkovat a az potom sa mu pocita cas v systeme
 		Customer customer = new Customer(_mySim.currentTime());
 		customer.setArrivedOnCar(true);
