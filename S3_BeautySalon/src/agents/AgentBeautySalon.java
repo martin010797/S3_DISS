@@ -1,6 +1,7 @@
 package agents;
 
 import OSPABA.*;
+import OSPStat.Stat;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
@@ -31,6 +32,8 @@ public class AgentBeautySalon extends Agent
 
 	private MessageForm processedMessage;
 
+	private Stat timeInSystem;
+
 	public AgentBeautySalon(int id, Simulation mySim, Agent parent)
 	{
 		super(id, mySim, parent);
@@ -54,6 +57,7 @@ public class AgentBeautySalon extends Agent
 		numberOfServedCustomers = 0;
 		numberOfServedCustomersUntil17 = 0;
 		numberOfLeavingCustomers = 0;
+		timeInSystem = new Stat();
 	}
 
 	private void addPersonnel(){
@@ -140,6 +144,10 @@ public class AgentBeautySalon extends Agent
 
 	public void setProcessedMessage(MessageForm processedMessage) {
 		this.processedMessage = processedMessage;
+	}
+
+	public Stat getTimeInSystem() {
+		return timeInSystem;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

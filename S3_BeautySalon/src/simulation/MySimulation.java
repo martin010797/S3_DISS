@@ -130,7 +130,7 @@ public class MySimulation extends Simulation
 		return time;
 	}
 
-	private String convertCurrentPosition(CurrentPosition currentPosition){
+	public String convertCurrentPosition(CurrentPosition currentPosition){
 		switch (currentPosition){
 			case PAYING:{
 				return "Platba";

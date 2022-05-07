@@ -135,7 +135,7 @@
               <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Dlzka sleep(ms):"/>
+              <text value="Trvanie:"/>
             </properties>
           </component>
           <component id="bbef" class="javax.swing.JTextField" binding="lengthOfSleepTextField">
@@ -151,7 +151,7 @@
               <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Delta t(ms):"/>
+              <text value="Interval:"/>
             </properties>
           </component>
           <component id="f345c" class="javax.swing.JTextField" binding="deltaTTextField">
