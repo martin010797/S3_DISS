@@ -25,6 +25,7 @@ public class AgentReceptionist extends Agent
 	//TODO s tymto zatial nic neriesime. Asi sa ani nepouzije. Bude sa posielat sprava o zatvaracke kde sa potom zoberu stats
 	private WStat lengthOfReceptionQueueUntil17;
 	private Stat waitTimeForPlacingOrder;
+	private double lengthOfQueueUntil17;
 
 	private Random seedGenerator;
 	//generatory
@@ -52,6 +53,7 @@ public class AgentReceptionist extends Agent
 		addOwnMessage(Mc.paymentProcessFinished);
 		addOwnMessage(Mc.numberOfCustomersInQueues);
 		addOwnMessage(Mc.tryServeCustomerFromQueue);
+		addOwnMessage(Mc.closingSalon);
 	}
 
 	@Override
@@ -70,6 +72,7 @@ public class AgentReceptionist extends Agent
 			isSomeReceptionistFree = false;
 		}
 		numberOfStartedOrders = 0;
+		lengthOfQueueUntil17 = -1;
 	}
 
 	private void addReceptionists(){
@@ -154,6 +157,14 @@ public class AgentReceptionist extends Agent
 
 	public void addToNumberOfStartedOrders() {
 		this.numberOfStartedOrders++;
+	}
+
+	public double getLengthOfQueueUntil17() {
+		return lengthOfQueueUntil17;
+	}
+
+	public void setLengthOfQueueUntil17(double lengthOfQueueUntil17) {
+		this.lengthOfQueueUntil17 = lengthOfQueueUntil17;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

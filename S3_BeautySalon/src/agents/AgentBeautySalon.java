@@ -35,10 +35,13 @@ public class AgentBeautySalon extends Agent
 	private Stat timeInSystem;
 	private Stat timeInSystemUntil17;
 
+	private boolean plannedClosing;
+
 	public AgentBeautySalon(int id, Simulation mySim, Agent parent)
 	{
 		super(id, mySim, parent);
 		init();
+		new ProcessClosing(Id.processClosing, mySim(), this);
 		//listOfHairStylists = new ArrayList<>();
 		//listOfMakeupArtists = new ArrayList<>();
 		//listOfReceptionists = new ArrayList<>();
@@ -46,6 +49,7 @@ public class AgentBeautySalon extends Agent
 
 		addOwnMessage(Mc.numberOfCustomersInQueues);
 		addOwnMessage(Mc.numberOfCustomersInQueuesInit);
+		addOwnMessage(Mc.closingProcessFinished);
 	}
 
 	@Override
@@ -60,6 +64,7 @@ public class AgentBeautySalon extends Agent
 		numberOfLeavingCustomers = 0;
 		timeInSystem = new Stat();
 		timeInSystemUntil17 = new Stat();
+		plannedClosing = false;
 	}
 
 	private void addPersonnel(){
@@ -154,6 +159,14 @@ public class AgentBeautySalon extends Agent
 
 	public Stat getTimeInSystemUntil17() {
 		return timeInSystemUntil17;
+	}
+
+	public boolean isPlannedClosing() {
+		return plannedClosing;
+	}
+
+	public void setPlannedClosing(boolean plannedClosing) {
+		this.plannedClosing = plannedClosing;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

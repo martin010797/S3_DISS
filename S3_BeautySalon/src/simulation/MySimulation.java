@@ -74,12 +74,13 @@ public class MySimulation extends Simulation
 	public void replicationFinished()
 	{
 		// Collect local statistics into global, update UI, etc...
-		super.replicationFinished();
 		timeInSystem.addSample(agentBeautySalon().getTimeInSystem().mean());
 		timeInSystemUntil17.addSample(agentBeautySalon().getTimeInSystemUntil17().mean());
+		agentReceptionist().getLengthOfReceptionQueue().addSample(agentReceptionist().getReceptionWaitingQueue().size());
 		lengthOfQueueReception.addSample(agentReceptionist().getLengthOfReceptionQueue().mean());
 		waitTimeForPlacingOrder.addSample(agentReceptionist().getWaitTimeForPlacingOrder().mean());
-		//TODO vymysliet ako statistiky len do 17:00
+		lengthOfQueueReceptionUntil17.addSample(agentReceptionist().getLengthOfQueueUntil17());
+		super.replicationFinished();
 		if (typeOfSimulation == TypeOfSimulation.MAX_SPEED){
 			refreshGui();
 		}

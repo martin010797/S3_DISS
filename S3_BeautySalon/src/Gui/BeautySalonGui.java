@@ -196,10 +196,6 @@ public class BeautySalonGui implements ISimDelegate{
                     simulator.pauseSimulation();
                     isPausedLabel.setVisible(true);
                 }
-                //TODO
-                /*if(simulator.setPaused(true)){
-                    isPausedLabel.setVisible(true);
-                }*/
             }
         });
         changeTheSpeedButton.addActionListener(new ActionListener() {
@@ -451,7 +447,7 @@ public class BeautySalonGui implements ISimDelegate{
                 + "\n      90% Interval spolahlivosti: <" +
                 getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().confidenceInterval_90()[0]) +
                 ", " + getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().confidenceInterval_90()[1]) +
-                ">\n    Priemerny pocet v rade pred recepciou(ESTE NEFUNKCNE): " +
+                ">\n    Priemerny pocet v rade pred recepciou: " +
                 Math.round(sim.getLengthOfQueueReceptionUntil17().mean() * 100.0) / 100.0 +
                 "\n    Priemerny cas cakania v rade na zadanie objednavky: " +
                 getTotalTimeFromSeconds(sim.getWaitTimeForPlacingOrder().mean());

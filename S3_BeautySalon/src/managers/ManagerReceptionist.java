@@ -187,11 +187,38 @@ public class ManagerReceptionist extends Manager
 		planNextWritingOrderOrPayment();
 	}
 
+	public void processClosingSalon(MessageForm message){
+		//TODO poslat zakaznikov z radu prec
+		//mazanie zakaznikov z radu(ktori chcu zadavat objednavku)
+		PriorityQueue<Customer> listOfCustomersForPaying = new PriorityQueue<>();
+		while (!myAgent().getReceptionWaitingQueue().isEmpty()){
+			if (myAgent().getReceptionWaitingQueue().peek().isPaying()){
+				listOfCustomersForPaying.add(myAgent().getReceptionWaitingQueue().poll());
+			}else {
+				Customer customer = myAgent().getReceptionWaitingQueue().poll();
+				MessageForm m = customer.getMessage();
+				m.setCode(Mc.writeOrder);
+				response(m);
+			}
+		}
+		while (!listOfCustomersForPaying.isEmpty()){
+			myAgent().getReceptionWaitingQueue().add(listOfCustomersForPaying.poll());
+		}
+
+		//nastavenie dlzky radu o 17:00
+		myAgent().getLengthOfReceptionQueue().addSample(myAgent().getReceptionWaitingQueue().size());
+		myAgent().setLengthOfQueueUntil17(myAgent().getLengthOfReceptionQueue().mean());
+	}
+
 	//meta! userInfo="Process messages defined in code", id="0"
 	public void processDefault(MessageForm message)
 	{
 		switch (message.code())
 		{
+			case Mc.closingSalon:{
+				processClosingSalon(message);
+				break;
+			}
 			case Mc.numberOfCustomersInQueues:{
 				processNumberOfMessagesInQueues(message);
 				break;

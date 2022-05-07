@@ -29,4 +29,6 @@ public class Id extends IdList
 	public static final int processSkinCleaning = 1010;
 	public static final int processMakeUp = 1011;
 	//meta! tag="end"
+
+	public static final int processClosing = 1012;
 }

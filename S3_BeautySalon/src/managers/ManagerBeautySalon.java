@@ -58,6 +58,13 @@ public class ManagerBeautySalon extends Manager
 		m.setAddressee(mySim().findAgent(Id.agentHairstylist));
 		call(m);
 		//request(message);
+
+		if (!myAgent().isPlannedClosing()){
+			MyMessage newMessage = new MyMessage(mySim());
+			newMessage.setAddressee(myAgent().findAssistant(Id.processClosing));
+			startContinualAssistant(newMessage);
+			myAgent().setPlannedClosing(true);
+		}
 	}
 
 	//meta! sender="AgentHairstylist", id="73", type="Response"
@@ -111,6 +118,7 @@ public class ManagerBeautySalon extends Manager
 		Customer customer = ((MyMessage) message).getCustomer();
 		if (!customer.isHairstyle() && !customer.isCleaning() && !customer.isMakeup()){
 			//zakaznik odchadza lebo nestihol zadat objednavku pred 17:00
+			myAgent().getListOfCustomersInSalon().remove(customer);
 			myAgent().addLeavingCustomerToStats();
 			message.setCode(Mc.serveCustomer);
 			response(message);
@@ -188,11 +196,20 @@ public class ManagerBeautySalon extends Manager
 		}
 	}
 
+	public void processFinishedClosingProcess(MessageForm message){
+		message.setCode(Mc.closingSalon);
+		message.setAddressee(mySim().findAgent(Id.agentReceptionist));
+		notice(message);
+	}
+
 	//meta! userInfo="Process messages defined in code", id="0"
 	public void processDefault(MessageForm message)
 	{
 		switch (message.code())
 		{
+			case Mc.finish:
+				processFinishedClosingProcess(message);
+				break;
 			case Mc.numberOfCustomersInQueues: {
 				switch (message.sender().id())
 				{
