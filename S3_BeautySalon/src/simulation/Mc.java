@@ -24,4 +24,8 @@ public class Mc extends IdList
 	public static final int paymentProcessFinished = 5;
 	public static final int numberOfCustomersInQueues = 6;
 	public static final int numberOfCustomersInQueuesInit = 7;
+	public static final int hairstyleProcessFinished = 8;
+	public static final int makeUpProcessFinished = 9;
+	public static final int cleaningProcessFinished = 10;
+	public static final int tryServeCustomerFromQueue = 11;
 }

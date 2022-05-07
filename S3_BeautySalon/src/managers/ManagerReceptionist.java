@@ -136,11 +136,10 @@ public class ManagerReceptionist extends Manager
 		planNextWritingOrderOrPayment();
 	}
 
-	//TODO toto by sa mozno mohlo volat zakazdym ked pride NOVA sprava ale neviem ako to bude so synchronizaciou
 	public void planNextWritingOrderOrPayment(){
 		//planovanie dalsieho vybavovania objednavky/platby
 		//pokial je niekto v rade pred recepciou nech si ho priradi niekto z recepcie
-		if (!myAgent().getReceptionWaitingQueue().isEmpty()){
+		if (!myAgent().getReceptionWaitingQueue().isEmpty() && myAgent().isSomeReceptionistFree()){
 			if (myAgent().getReceptionWaitingQueue().peek().isPaying()){
 				//ak je platiaci zakaznik tak sa vytvori zaciatok platby
 				Customer customer = myAgent().getReceptionWaitingQueue().poll();
@@ -184,6 +183,10 @@ public class ManagerReceptionist extends Manager
 		}
 	}
 
+	public void processTryServeCustomerFromQueue(MessageForm message){
+		planNextWritingOrderOrPayment();
+	}
+
 	//meta! userInfo="Process messages defined in code", id="0"
 	public void processDefault(MessageForm message)
 	{
@@ -191,6 +194,10 @@ public class ManagerReceptionist extends Manager
 		{
 			case Mc.numberOfCustomersInQueues:{
 				processNumberOfMessagesInQueues(message);
+				break;
+			}
+			case Mc.tryServeCustomerFromQueue:{
+				processTryServeCustomerFromQueue(message);
 				break;
 			}
 		}

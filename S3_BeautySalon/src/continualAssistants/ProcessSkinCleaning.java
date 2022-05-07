@@ -4,6 +4,8 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import OSPABA.Process;
+import simulation.Participants.CurrentPosition;
+import simulation.Participants.Customer;
 
 //meta! id="60"
 public class ProcessSkinCleaning extends Process
@@ -23,6 +25,18 @@ public class ProcessSkinCleaning extends Process
 	//meta! sender="AgentMakeUpArtist", id="61", type="Start"
 	public void processStart(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		customer.setCurrentPosition(CurrentPosition.CLEANING_SKIN);
+		customer.setServiceStartTime(mySim().currentTime());
+
+		double lengthOfCleaning = myAgent().getCleaningTriangularGenerator().sample();
+		//pozdrzanie
+		message.setCode(Mc.cleaningProcessFinished);
+		hold(lengthOfCleaning,message);
+	}
+
+	public void processCleaningFinished(MessageForm message){
+		assistantFinished(message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -30,6 +44,10 @@ public class ProcessSkinCleaning extends Process
 	{
 		switch (message.code())
 		{
+			case Mc.cleaningProcessFinished:{
+				processCleaningFinished(message);
+				break;
+			}
 		}
 	}
 

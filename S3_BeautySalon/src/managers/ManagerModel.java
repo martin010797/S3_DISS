@@ -60,7 +60,14 @@ public class ManagerModel extends Manager
 	//meta! sender="AgentBeautySalon", id="69", type="Response"
 	public void processServeCustomer(MessageForm message)
 	{
-		//TODO
+		Customer customer = ((MyMessage) message).getCustomer();
+		if (!customer.isArrivedOnCar()){
+			//odchod zakaznika ktory neprisiel na aute tak zo systemu odchadza hned
+			myAgent().getListOfCustomersInSystem().remove(customer);
+		}else {
+			//ti co prisli na aute musia este odist autom z parkoviska
+			//TODO
+		}
 	}
 
 	//meta! sender="AgentParking", id="66", type="Response"

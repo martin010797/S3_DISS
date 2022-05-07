@@ -4,6 +4,12 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import continualAssistants.*;
+import simulation.Participants.CurrentPosition;
+import simulation.Participants.Customer;
+import simulation.Participants.MakeUpArtist;
+import simulation.Participants.Receptionist;
+
+import java.util.PriorityQueue;
 
 //meta! id="36"
 public class ManagerMakeUpArtist extends Manager
@@ -29,21 +35,122 @@ public class ManagerMakeUpArtist extends Manager
 	//meta! sender="AgentBeautySalon", id="79", type="Request"
 	public void processMakeUp(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		if (myAgent().isSomeMakeupArtistsFree()){
+			//vykonavanie sluzby licenia
+			PriorityQueue<MakeUpArtist> availableMakeupArtists = new PriorityQueue<>();
+			for (int i = 0; i < myAgent().getListOfMakeupArtists().size(); i++){
+				MakeUpArtist m = myAgent().getListOfMakeupArtists().get(i);
+				if (!m.isWorking()) {
+					availableMakeupArtists.add(m);
+				}
+			}
+			if (availableMakeupArtists.size() == 1){
+				myAgent().setSomeMakeupArtistsFree(false);
+			}
+			MakeUpArtist chosenMakeupArtist = availableMakeupArtists.poll();
+			chosenMakeupArtist.setWorking(true);
+			customer.setChosenPersonnel(chosenMakeupArtist);
+			message.setAddressee(myAgent().findAssistant(Id.processMakeUp));
+			startContinualAssistant(message);
+		}else {
+			//postavenie do radu
+			customer.setMessage(message);
+			customer.setCurrentPosition(CurrentPosition.IN_QUEUE_FOR_MAKEUP);
+			myAgent().getMakeupWaitingQueue().enqueue(customer);
+			//statistiky o dlzke radu by sa mali zaznamenavat v queue
+		}
 	}
 
 	//meta! sender="ProcessMakeUp", id="63", type="Finish"
 	public void processFinishProcessMakeUp(MessageForm message)
 	{
+		//TODO
+		Customer customer = ((MyMessage) message).getCustomer();
+		MakeUpArtist makeUpArtist = ((MakeUpArtist) customer.getChosenPersonnel());
+
+		//update pre kozmeticku
+		makeUpArtist.setWorking(false);
+		myAgent().setSomeMakeupArtistsFree(true);
+		Double workedTime = makeUpArtist.getWorkedTimeTogether();
+		makeUpArtist.setWorkedTimeTogether(workedTime + mySim().currentTime() - customer.getServiceStartTime());
+
+		//update pre customera
+		customer.setMakeup(false);
+
+		planNextMakeUpOrCleaning();
+
+		//respond pre agenta beauty simulator
+		message.setCode(Mc.makeUp);
+		response(message);
 	}
 
 	//meta! sender="ProcessSkinCleaning", id="61", type="Finish"
 	public void processFinishProcessSkinCleaning(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		MakeUpArtist makeUpArtist = ((MakeUpArtist) customer.getChosenPersonnel());
+
+		//update pre kozmeticku
+		makeUpArtist.setWorking(false);
+		myAgent().setSomeMakeupArtistsFree(true);
+		Double workedTime = makeUpArtist.getWorkedTimeTogether();
+		makeUpArtist.setWorkedTimeTogether(workedTime + mySim().currentTime() - customer.getServiceStartTime());
+
+		//update pre customera
+		customer.setCleaning(false);
+
+		planNextMakeUpOrCleaning();
+
+		//respond pre agenta beauty simulator
+		message.setCode(Mc.skinCleaning);
+		response(message);
 	}
 
 	//meta! sender="AgentBeautySalon", id="75", type="Request"
 	public void processSkinCleaning(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		if (myAgent().isSomeMakeupArtistsFree()){
+			//vykonavanie sluzby cistenia pleti
+			PriorityQueue<MakeUpArtist> availableMakeupArtists = new PriorityQueue<>();
+			for (int i = 0; i < myAgent().getListOfMakeupArtists().size(); i++){
+				MakeUpArtist m = myAgent().getListOfMakeupArtists().get(i);
+				if (!m.isWorking()) {
+					availableMakeupArtists.add(m);
+				}
+			}
+			if (availableMakeupArtists.size() == 1){
+				myAgent().setSomeMakeupArtistsFree(false);
+			}
+			MakeUpArtist chosenMakeupArtist = availableMakeupArtists.poll();
+			chosenMakeupArtist.setWorking(true);
+			customer.setChosenPersonnel(chosenMakeupArtist);
+			message.setAddressee(myAgent().findAssistant(Id.processSkinCleaning));
+			startContinualAssistant(message);
+		}else {
+			//postavenie do radu
+			customer.setMessage(message);
+			customer.setCurrentPosition(CurrentPosition.IN_QUEUE_FOR_MAKEUP);
+			myAgent().getMakeupWaitingQueue().enqueue(customer);
+			//statistiky o dlzke radu by sa mali zaznamenavat v queue
+		}
+	}
+
+	public void planNextMakeUpOrCleaning(){
+		//pokial je niekto v rade tak si ho priradi nejaka kozmeticka
+		if (!myAgent().getMakeupWaitingQueue().isEmpty()){
+			Customer customer = myAgent().getMakeupWaitingQueue().dequeue();
+			MessageForm message = customer.getMessage();
+			//statistiky o dlzke radu sa meraju same
+			if (customer.isCleaning()){
+				//ma sa planovat cistenie pleti
+				processSkinCleaning(message);
+			}else {
+				//ma sa planovat licenie
+				processMakeUp(message);
+			}
+		}
 	}
 
 	public void processNumberOfCustomersInQueues(MessageForm message){

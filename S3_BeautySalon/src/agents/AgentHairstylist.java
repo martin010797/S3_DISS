@@ -40,6 +40,7 @@ public class AgentHairstylist extends Agent
 
 		addOwnMessage(Mc.numberOfCustomersInQueues);
 		addOwnMessage(Mc.numberOfCustomersInQueuesInit);
+		addOwnMessage(Mc.hairstyleProcessFinished);
 	}
 
 	@Override

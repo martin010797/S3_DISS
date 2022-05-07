@@ -40,6 +40,8 @@ public class AgentMakeUpArtist extends Agent
 
 		addOwnMessage(Mc.numberOfCustomersInQueues);
 		addOwnMessage(Mc.numberOfCustomersInQueuesInit);
+		addOwnMessage(Mc.makeUpProcessFinished);
+		addOwnMessage(Mc.cleaningProcessFinished);
 	}
 
 	@Override

@@ -51,6 +51,7 @@ public class AgentReceptionist extends Agent
 		addOwnMessage(Mc.orderingProcessFinished);
 		addOwnMessage(Mc.paymentProcessFinished);
 		addOwnMessage(Mc.numberOfCustomersInQueues);
+		addOwnMessage(Mc.tryServeCustomerFromQueue);
 	}
 
 	@Override

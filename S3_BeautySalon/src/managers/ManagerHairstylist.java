@@ -4,6 +4,12 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import continualAssistants.*;
+import simulation.Participants.CurrentPosition;
+import simulation.Participants.Customer;
+import simulation.Participants.Hairstylist;
+import simulation.Participants.Receptionist;
+
+import java.util.PriorityQueue;
 
 //meta! id="35"
 public class ManagerHairstylist extends Manager
@@ -29,11 +35,64 @@ public class ManagerHairstylist extends Manager
 	//meta! sender="AgentBeautySalon", id="73", type="Request"
 	public void processHairstyling(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		if (myAgent().isSomeHairstylistFree()){
+			//vykonavanie sluzby ucesu
+			PriorityQueue<Hairstylist> availableHairstylists = new PriorityQueue<>();
+			for (int i = 0; i < myAgent().getListOfHairStylists().size(); i++){
+				Hairstylist h = myAgent().getListOfHairStylists().get(i);
+				if (!h.isWorking()) {
+					availableHairstylists.add(h);
+				}
+			}
+			if (availableHairstylists.size() == 1){
+				myAgent().setSomeHairstylistFree(false);
+			}
+			Hairstylist chosenHairstylist = availableHairstylists.poll();
+			chosenHairstylist.setWorking(true);
+			customer.setChosenPersonnel(chosenHairstylist);
+			//spustenie procesu pre uces
+			message.setAddressee(myAgent().findAssistant(Id.processHairstyle));
+			startContinualAssistant(message);
+		}else {
+			//postavenie do radu
+			customer.setMessage(message);
+			customer.setCurrentPosition(CurrentPosition.IN_QUEUE_FOR_HAIRSTYLE);
+			myAgent().getHairstyleWaitingQueue().enqueue(customer);
+			//statistiky o dlzke radu by sa mali zaznamenavat v queue
+		}
 	}
 
 	//meta! sender="ProcessHairstyle", id="54", type="Finish"
 	public void processFinish(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		Hairstylist hairstylist = ((Hairstylist) customer.getChosenPersonnel());
+
+		//update pre kadernicku
+		hairstylist.setWorking(false);
+		myAgent().setSomeHairstylistFree(true);
+		Double workedTime = hairstylist.getWorkedTimeTogether();
+		hairstylist.setWorkedTimeTogether(workedTime + mySim().currentTime() - customer.getServiceStartTime());
+
+		//update pre customera
+		customer.setHairstyle(false);
+
+		//respond pre agenta beauty simulator
+		message.setCode(Mc.hairstyling);
+		response(message);
+
+		planNextHairstyle();
+	}
+
+	public void planNextHairstyle(){
+		//pokial je niekto v rade tak si ho priradi niekto
+		if (!myAgent().getHairstyleWaitingQueue().isEmpty()){
+			Customer customer = myAgent().getHairstyleWaitingQueue().dequeue();
+			MessageForm message = customer.getMessage();
+			//statistiky o dlzke radu sa meraju same
+			processHairstyling(message);
+		}
 	}
 
 	public void processNumberOfCustomersInQueues(MessageForm message){

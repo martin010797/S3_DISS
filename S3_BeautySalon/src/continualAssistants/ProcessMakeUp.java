@@ -4,6 +4,8 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import OSPABA.Process;
+import simulation.Participants.CurrentPosition;
+import simulation.Participants.Customer;
 
 //meta! id="62"
 public class ProcessMakeUp extends Process
@@ -23,6 +25,26 @@ public class ProcessMakeUp extends Process
 	//meta! sender="AgentMakeUpArtist", id="63", type="Start"
 	public void processStart(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		customer.setCurrentPosition(CurrentPosition.MAKE_UP);
+		customer.setServiceStartTime(mySim().currentTime());
+
+		double choice = myAgent().getMakeupTypeGenerator().nextDouble();
+		double lengthOfMakeup;
+		if (choice < 0.3){
+			//jednoduche licenie
+			lengthOfMakeup = myAgent().getSimpleMakeupGenerator().sample()*60;
+		}else {
+			//zlozite
+			lengthOfMakeup = myAgent().getComplicatedMakeupGenerator().sample()*60;
+		}
+		//pozdrzanie
+		message.setCode(Mc.makeUpProcessFinished);
+		hold(lengthOfMakeup,message);
+	}
+
+	public void processMekeUpProcessFinished(MessageForm message){
+		assistantFinished(message);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"
@@ -30,6 +52,10 @@ public class ProcessMakeUp extends Process
 	{
 		switch (message.code())
 		{
+			case Mc.makeUpProcessFinished:{
+				processMekeUpProcessFinished(message);
+				break;
+			}
 		}
 	}
 
