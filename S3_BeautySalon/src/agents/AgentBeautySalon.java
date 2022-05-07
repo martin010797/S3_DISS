@@ -33,6 +33,7 @@ public class AgentBeautySalon extends Agent
 	private MessageForm processedMessage;
 
 	private Stat timeInSystem;
+	private Stat timeInSystemUntil17;
 
 	public AgentBeautySalon(int id, Simulation mySim, Agent parent)
 	{
@@ -58,6 +59,7 @@ public class AgentBeautySalon extends Agent
 		numberOfServedCustomersUntil17 = 0;
 		numberOfLeavingCustomers = 0;
 		timeInSystem = new Stat();
+		timeInSystemUntil17 = new Stat();
 	}
 
 	private void addPersonnel(){
@@ -148,6 +150,10 @@ public class AgentBeautySalon extends Agent
 
 	public Stat getTimeInSystem() {
 		return timeInSystem;
+	}
+
+	public Stat getTimeInSystemUntil17() {
+		return timeInSystemUntil17;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

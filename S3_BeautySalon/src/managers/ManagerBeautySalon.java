@@ -37,6 +37,7 @@ public class ManagerBeautySalon extends Manager
 		//TODO este sa uvidi ako sa spravia nakoniec statistiky do 17:00(mozno vytvorenie procesu)
 		if (mySim().currentTime() <= 28800){
 			myAgent().addServedCustomerUntil17ToStats();
+			myAgent().getTimeInSystemUntil17().addSample(mySim().currentTime() - customer.getArriveTime());
 		}
 		myAgent().getTimeInSystem().addSample(mySim().currentTime() - customer.getArriveTime());
 		message.setCode(Mc.serveCustomer);

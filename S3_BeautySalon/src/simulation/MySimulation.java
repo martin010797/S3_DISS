@@ -75,6 +75,11 @@ public class MySimulation extends Simulation
 	{
 		// Collect local statistics into global, update UI, etc...
 		super.replicationFinished();
+		timeInSystem.addSample(agentBeautySalon().getTimeInSystem().mean());
+		timeInSystemUntil17.addSample(agentBeautySalon().getTimeInSystemUntil17().mean());
+		lengthOfQueueReception.addSample(agentReceptionist().getLengthOfReceptionQueue().mean());
+		waitTimeForPlacingOrder.addSample(agentReceptionist().getWaitTimeForPlacingOrder().mean());
+		//TODO vymysliet ako statistiky len do 17:00
 		if (typeOfSimulation == TypeOfSimulation.MAX_SPEED){
 			refreshGui();
 		}
@@ -201,6 +206,26 @@ public class MySimulation extends Simulation
 
 	public int getNumberOfHairstylists() {
 		return numberOfHairstylists;
+	}
+
+	public Stat getTimeInSystem() {
+		return timeInSystem;
+	}
+
+	public Stat getLengthOfQueueReception() {
+		return lengthOfQueueReception;
+	}
+
+	public Stat getWaitTimeForPlacingOrder() {
+		return waitTimeForPlacingOrder;
+	}
+
+	public Stat getTimeInSystemUntil17() {
+		return timeInSystemUntil17;
+	}
+
+	public Stat getLengthOfQueueReceptionUntil17() {
+		return lengthOfQueueReceptionUntil17;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

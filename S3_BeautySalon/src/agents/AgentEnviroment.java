@@ -42,7 +42,8 @@ public class AgentEnviroment extends Agent
 
 	private void prepareGenerators(){
 		carArrivalsGenerator = new ExponentialRNG((double) (3600/8), new Random(seedGenerator.nextInt()));
-		footArrivalsGenerator = new ExponentialRNG((double) (3600/5), new Random(seedGenerator.nextInt()));
+		//footArrivalsGenerator = new ExponentialRNG((double) (3600/5), new Random(seedGenerator.nextInt()));
+		footArrivalsGenerator = new ExponentialRNG((double) (3600/8), new Random(seedGenerator.nextInt()));
 	}
 
 	public ExponentialRNG getCarArrivalsGenerator() {

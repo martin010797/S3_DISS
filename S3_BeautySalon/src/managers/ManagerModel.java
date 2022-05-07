@@ -68,6 +68,12 @@ public class ManagerModel extends Manager
 			//ti co prisli na aute musia este odist autom z parkoviska
 			//TODO
 		}
+		//vypnutie symulacie ak uz nie je nikto v systeme
+		if (((MySimulation) mySim()).getTypeOfSimulation() == TypeOfSimulation.OBSERVE
+				&& mySim().currentTime() >= 28800
+				&& myAgent().getListOfCustomersInSystem().isEmpty()){
+			mySim().stopSimulation();
+		}
 	}
 
 	//meta! sender="AgentParking", id="66", type="Response"
@@ -78,6 +84,14 @@ public class ManagerModel extends Manager
 	//meta! sender="AgentParking", id="68", type="Response"
 	public void processLeavingCarPark(MessageForm message)
 	{
+		//TODO
+		//vymazanie zakaznika zo systemu
+
+		if (((MySimulation) mySim()).getTypeOfSimulation() == TypeOfSimulation.OBSERVE
+				&& mySim().currentTime() >= 28800
+				&& myAgent().getListOfCustomersInSystem().isEmpty()){
+			mySim().stopSimulation();
+		}
 	}
 
 	public void processInit(MessageForm message){

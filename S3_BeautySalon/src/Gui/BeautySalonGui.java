@@ -128,15 +128,13 @@ public class BeautySalonGui implements ISimDelegate{
                         //neviem ako s uknocenim simulacneho behu este. Ci sa deafultne nastavi ovela dlhsi beh a pauzne
                         // sa niekde v agentoch ked bude cas vacsi ako 17:00 a len sa dobehnu zakaznici ktori su v systeme
                         if (simulator.getTypeOfSimulation() == TypeOfSimulation.OBSERVE){
-                            //TODO neskor upravit na skutocne zadavane hodnoty
-                            //simulator.setSimSpeed(50,0.05);
                             simulator.setSimSpeed(
                                     Double.parseDouble(deltaTTextField.getText()),
                                     Double.parseDouble(lengthOfSleepTextField.getText()));
                             simulator.simulateAsync(1);
                         }else {
                             simulator.setMaxSimSpeed();
-                            simulator.simulate(Integer.parseInt(numberOfReplicationsTextField.getText()));
+                            simulator.simulateAsync(Integer.parseInt(numberOfReplicationsTextField.getText()));
                         }
                     }
                 }else if (simulator.isPaused()){
@@ -247,6 +245,9 @@ public class BeautySalonGui implements ISimDelegate{
             case paused:{
                 break;
             }
+            case replicationStopped:{
+                refresh(simulation);
+            }
         }
     }
 
@@ -277,7 +278,10 @@ public class BeautySalonGui implements ISimDelegate{
                 chartOutputRadioButton.setEnabled(true);
             }*/
         }else if (typeOfSimulation == TypeOfSimulation.MAX_SPEED){
-
+            if (sim.currentReplication() > 10){
+                String stats = getGlobalStatsAndForCurrentReplication(sim);
+                statisticsTextPane.setText(stats);
+            }
         }else {
             //aj s grafom
         }
@@ -285,38 +289,6 @@ public class BeautySalonGui implements ISimDelegate{
         /*BeautySalonSimulator sim = (BeautySalonSimulator) simulator;
         TypeOfSimulation typeOfSimulation = sim.getTypeOfSimulation();
         if (typeOfSimulation == TypeOfSimulation.OBSERVE){
-            //toto vykresluj iba ak je zapnute sledovanie simulacie
-            simulationTimeLabel.setText(sim.getCurrentTime());
-
-            String statesOfSystem = sim.getStatesOfSimulation();
-            //aby vykreslovalo len ked nastala zmena nejakej hondoty
-            if (!statesOfSystem.equals(lastStatesValues)) {
-                statesOfSystemTextPane.setText(statesOfSystem);
-                lastStatesValues = statesOfSystemTextPane.getText();
-            }
-            String calendar = sim.getCalendar();
-            if (!calendar.equals(lastCalendar)){
-                calendarTextPane.setText(calendar);
-                lastCalendar = calendarTextPane.getText();
-            }
-
-            //v spracovanych nezobrazuje systemove udalosti
-            if (sim.getLastProcessedEvent() != null){
-                Event e = sim.getLastProcessedEvent();
-                lastProcessedEventLabel.setText(sim.convertTimeOfSystem(e.getTime()) + "  " + e.getNameOfTheEvent());
-            }
-
-            String stats = sim.getStats();
-            if (!stats.equals(lastStats)){
-                statisticsTextPane.setText(stats);
-                lastStats = statisticsTextPane.getText();
-            }
-
-            if (sim.isFinished()){
-                fastSimulationRadioButton.setEnabled(true);
-                slowSimulationRadioButton.setEnabled(true);
-                chartOutputRadioButton.setEnabled(true);
-            }
         }else if (typeOfSimulation == TypeOfSimulation.MAX_SPEED){
             String stats = sim.getGlobalStatsAndForCurrentReplication();
             //if (!stats.equals(lastStats)){
@@ -457,6 +429,43 @@ public class BeautySalonGui implements ISimDelegate{
             time += seconds;
         }
         return time;
+    }
+
+    private String getGlobalStatsAndForCurrentReplication(Simulation simulator){
+        MySimulation sim = (MySimulation) simulator;
+        //celkove statistiky
+        String result = "Globalne statistiky: \n  Celkovo: \n    Cislo replikacie: " + sim.currentReplication() +
+                "\n    Priemerny cas zakaznika v systeme: " + getTotalTimeFromSeconds(sim.getTimeInSystem().mean()) +
+                "\n      Smerodajna odchylka: " + getTotalTimeFromSeconds(sim.getTimeInSystem().stdev()) +
+                "\n      90% Interval spolahlivosti: <"
+                + getTotalTimeFromSeconds(sim.getTimeInSystem().confidenceInterval_90()[0])
+                + ", " + getTotalTimeFromSeconds(sim.getTimeInSystem().confidenceInterval_90()[1]) +
+                ">\n    Priemerny pocet v rade pred recepciou: " +
+                Math.round(sim.getLengthOfQueueReception().mean() * 100.0) / 100.0 +
+                "\n    Priemerny cas cakania v rade na zadanie objednavky: " +
+                getTotalTimeFromSeconds(sim.getWaitTimeForPlacingOrder().mean());
+        result += "\n  Iba do 17:00: \n    Cislo replikacie: " + sim.currentReplication() +
+                "\n    Priemerny cas zakaznika v systeme: " +
+                getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().mean()) +
+                "\n      Smerodajna odchylka: " + getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().stdev())
+                + "\n      90% Interval spolahlivosti: <" +
+                getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().confidenceInterval_90()[0]) +
+                ", " + getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().confidenceInterval_90()[1]) +
+                ">\n    Priemerny pocet v rade pred recepciou(ESTE NEFUNKCNE): " +
+                Math.round(sim.getLengthOfQueueReceptionUntil17().mean() * 100.0) / 100.0 +
+                "\n    Priemerny cas cakania v rade na zadanie objednavky: " +
+                getTotalTimeFromSeconds(sim.getWaitTimeForPlacingOrder().mean());
+        //pre poslednu replikaciu
+        result += "\nPosledna replikacia(celkovy cas): \n";
+        result += "  Priemerny cas zakaznika v systeme: "
+                + getTotalTimeFromSeconds(sim.agentBeautySalon().getTimeInSystem().mean())
+                + "\n  " + sim.agentBeautySalon().getNumberOfServedCustomers() + " obsluzenych zakaznikov";
+        result += "\n  Priemerny cas cakania v rade na zadanie objednavky: "
+                + getTotalTimeFromSeconds(sim.agentReceptionist().getWaitTimeForPlacingOrder().mean())
+                + "\n  " + sim.agentReceptionist().getNumberOfStartedOrders() + " zadanych objednavok";
+        result += "\n  Priemerny pocet v rade pred recepciou: "
+                + Math.round(sim.agentReceptionist().getLengthOfReceptionQueue().mean() * 100.0) / 100.0;
+        return result;
     }
 
     public void createDatasets(){
