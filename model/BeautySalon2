@@ -2,6 +2,41 @@
 <ABAsim>
   <Agents>
     <Agent>
+      <SimId>10</SimId>
+      <InternalId>35</InternalId>
+      <Name>AgentHairstylist</Name>
+      <Bounds>1448,1422,180,180</Bounds>
+      <Reasoner>ManagerHairstylist</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+      <Components>
+        <Process>
+          <SimId>1007</SimId>
+          <InternalId>53</InternalId>
+          <Name>ProcessHairstyle</Name>
+          <Bounds>74,90,35,18</Bounds>
+        </Process>
+      </Components>
+    </Agent>
+    <Agent>
+      <SimId>1</SimId>
+      <InternalId>1</InternalId>
+      <Name>AgentModel</Name>
+      <Bounds>858,282,180,180</Bounds>
+      <Reasoner>ManagerModel</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+    </Agent>
+    <Agent>
+      <SimId>7</SimId>
+      <InternalId>26</InternalId>
+      <Name>AgentBeautySalon</Name>
+      <Bounds>1306,684,180,180</Bounds>
+      <Reasoner>ManagerBeautySalon</Reasoner>
+      <ReasonerBounds>73,26,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+    </Agent>
+    <Agent>
       <SimId>8</SimId>
       <InternalId>30</InternalId>
       <Name>AgentParking</Name>
@@ -25,13 +60,27 @@
       </Components>
     </Agent>
     <Agent>
-      <SimId>7</SimId>
-      <InternalId>26</InternalId>
-      <Name>AgentBeautySalon</Name>
-      <Bounds>1306,684,180,180</Bounds>
-      <Reasoner>ManagerBeautySalon</Reasoner>
-      <ReasonerBounds>73,26,32,25</ReasonerBounds>
+      <SimId>11</SimId>
+      <InternalId>36</InternalId>
+      <Name>AgentMakeUpArtist</Name>
+      <Bounds>2221,1057,180,180</Bounds>
+      <Reasoner>ManagerMakeUpArtist</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
+      <Components>
+        <Process>
+          <SimId>1010</SimId>
+          <InternalId>60</InternalId>
+          <Name>ProcessSkinCleaning</Name>
+          <Bounds>47,90,35,18</Bounds>
+        </Process>
+        <Process>
+          <SimId>1011</SimId>
+          <InternalId>62</InternalId>
+          <Name>ProcessMakeUp</Name>
+          <Bounds>107,87,35,18</Bounds>
+        </Process>
+      </Components>
     </Agent>
     <Agent>
       <SimId>9</SimId>
@@ -43,39 +92,16 @@
       <UsePetriNet>false</UsePetriNet>
       <Components>
         <Process>
-          <SimId>1009</SimId>
-          <InternalId>57</InternalId>
-          <Name>ProcessPayment</Name>
-          <Bounds>95,82,35,18</Bounds>
-        </Process>
-        <Process>
           <SimId>1008</SimId>
           <InternalId>55</InternalId>
           <Name>ProcessWritingOrder</Name>
           <Bounds>31,82,35,18</Bounds>
         </Process>
-      </Components>
-    </Agent>
-    <Agent>
-      <SimId>11</SimId>
-      <InternalId>36</InternalId>
-      <Name>AgentMakeUpArtist</Name>
-      <Bounds>2221,1057,180,180</Bounds>
-      <Reasoner>ManagerMakeUpArtist</Reasoner>
-      <ReasonerBounds>74,25,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
-      <Components>
         <Process>
-          <SimId>1011</SimId>
-          <InternalId>62</InternalId>
-          <Name>ProcessMakeUp</Name>
-          <Bounds>107,87,35,18</Bounds>
-        </Process>
-        <Process>
-          <SimId>1010</SimId>
-          <InternalId>60</InternalId>
-          <Name>ProcessSkinCleaning</Name>
-          <Bounds>47,90,35,18</Bounds>
+          <SimId>1009</SimId>
+          <InternalId>57</InternalId>
+          <Name>ProcessPayment</Name>
+          <Bounds>95,82,35,18</Bounds>
         </Process>
       </Components>
     </Agent>
@@ -101,32 +127,6 @@
           <Bounds>37,88,35,13</Bounds>
         </Scheduler>
       </Components>
-    </Agent>
-    <Agent>
-      <SimId>10</SimId>
-      <InternalId>35</InternalId>
-      <Name>AgentHairstylist</Name>
-      <Bounds>1363,1353,180,180</Bounds>
-      <Reasoner>ManagerHairstylist</Reasoner>
-      <ReasonerBounds>74,25,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
-      <Components>
-        <Process>
-          <SimId>1007</SimId>
-          <InternalId>53</InternalId>
-          <Name>ProcessHairstyle</Name>
-          <Bounds>74,90,35,18</Bounds>
-        </Process>
-      </Components>
-    </Agent>
-    <Agent>
-      <SimId>1</SimId>
-      <InternalId>1</InternalId>
-      <Name>AgentModel</Name>
-      <Bounds>858,282,180,180</Bounds>
-      <Reasoner>ManagerModel</Reasoner>
-      <ReasonerBounds>74,25,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
     </Agent>
   </Agents>
   <Messages>
@@ -363,6 +363,14 @@
       <Destination>55</Destination>
     </Message>
     <Message>
+      <SimId>1027</SimId>
+      <InternalId>122</InternalId>
+      <Name>TryServeCustomerFromQueue</Name>
+      <Type>Notice</Type>
+      <Source>26</Source>
+      <Destination>34</Destination>
+    </Message>
+    <Message>
       <InternalId>58</InternalId>
       <Type>StartFinish</Type>
       <Source>34</Source>
@@ -375,11 +383,19 @@
       <Destination>60</Destination>
     </Message>
     <Message>
+      <SimId>1028</SimId>
+      <InternalId>125</InternalId>
+      <Name>ClosingSalon</Name>
+      <Type>Notice</Type>
+      <Source>26</Source>
+      <Destination>34</Destination>
+    </Message>
+    <Message>
       <InternalId>63</InternalId>
       <Type>StartFinish</Type>
       <Source>36</Source>
       <Destination>62</Destination>
     </Message>
   </Messages>
-  <IID>120</IID>
+  <IID>127</IID>
 </ABAsim>
