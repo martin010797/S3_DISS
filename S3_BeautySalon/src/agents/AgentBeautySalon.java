@@ -16,13 +16,6 @@ import java.util.List;
 //meta! id="26"
 public class AgentBeautySalon extends Agent
 {
-	//private List<Hairstylist> listOfHairStylists;
-	//private List<MakeUpArtist> listOfMakeupArtists;
-	/*private List<Receptionist> listOfReceptionists;
-	private int numberOfReceptionists;*/
-	//private int numberOfMakeupArtists;
-	//private int numberOfHairstylists;
-
 	private int numberOfArrivedCustomers;
 	private int numberOfServedCustomers;
 	private int numberOfServedCustomersUntil17;
@@ -42,9 +35,6 @@ public class AgentBeautySalon extends Agent
 		super(id, mySim, parent);
 		init();
 		new ProcessClosing(Id.processClosing, mySim(), this);
-		//listOfHairStylists = new ArrayList<>();
-		//listOfMakeupArtists = new ArrayList<>();
-		//listOfReceptionists = new ArrayList<>();
 		listOfCustomersInSalon = new ArrayList<>();
 
 		addOwnMessage(Mc.numberOfCustomersInQueues);
@@ -57,7 +47,6 @@ public class AgentBeautySalon extends Agent
 	{
 		super.prepareReplication();
 		// Setup component for the next replication
-		addPersonnel();
 		numberOfArrivedCustomers = 0;
 		numberOfServedCustomers = 0;
 		numberOfServedCustomersUntil17 = 0;
@@ -66,48 +55,6 @@ public class AgentBeautySalon extends Agent
 		timeInSystemUntil17 = new Stat();
 		plannedClosing = false;
 	}
-
-	private void addPersonnel(){
-		//listOfReceptionists.clear();
-		//listOfHairStylists.clear();
-		//listOfMakeupArtists.clear();
-		/*for (int i = 0; i < numberOfReceptionists; i++){
-			Receptionist receptionist = new Receptionist();
-			listOfReceptionists.add(receptionist);
-		}*/
-		/*for (int i = 0; i < numberOfMakeupArtists; i++){
-			MakeUpArtist makeUpArtist = new MakeUpArtist();
-			listOfMakeupArtists.add(makeUpArtist);
-		}*/
-		/*for (int i = 0; i < numberOfHairstylists; i++){
-			Hairstylist hairstylist = new Hairstylist();
-			listOfHairStylists.add(hairstylist);
-		}*/
-	}
-
-	/*public int getNumberOfReceptionists() {
-		return numberOfReceptionists;
-	}
-
-	public void setNumberOfReceptionists(int numberOfReceptionists) {
-		this.numberOfReceptionists = numberOfReceptionists;
-	}*/
-
-	/*public int getNumberOfMakeupArtists() {
-		return numberOfMakeupArtists;
-	}
-
-	public void setNumberOfMakeupArtists(int numberOfMakeupArtists) {
-		this.numberOfMakeupArtists = numberOfMakeupArtists;
-	}*/
-
-	/*public int getNumberOfHairstylists() {
-		return numberOfHairstylists;
-	}
-
-	public void setNumberOfHairstylists(int numberOfHairstylists) {
-		this.numberOfHairstylists = numberOfHairstylists;
-	}*/
 
 	public int getNumberOfArrivedCustomers() {
 		return numberOfArrivedCustomers;

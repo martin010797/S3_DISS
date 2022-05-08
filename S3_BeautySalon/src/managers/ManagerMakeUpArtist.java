@@ -65,7 +65,6 @@ public class ManagerMakeUpArtist extends Manager
 	//meta! sender="ProcessMakeUp", id="63", type="Finish"
 	public void processFinishProcessMakeUp(MessageForm message)
 	{
-		//TODO
 		Customer customer = ((MyMessage) message).getCustomer();
 		MakeUpArtist makeUpArtist = ((MakeUpArtist) customer.getChosenPersonnel());
 

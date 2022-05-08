@@ -102,10 +102,6 @@ public class MySimulation extends Simulation
 		}
 	}
 
-	/*public void registerDelegate(ISimDelegate delegate){
-		delegates.add(delegate);
-	}*/
-
 	public String getCurrentTime() {
 		return convertTimeOfSystem(currentTime());
 	}

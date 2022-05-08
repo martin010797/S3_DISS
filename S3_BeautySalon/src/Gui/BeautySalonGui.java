@@ -129,14 +129,6 @@ public class BeautySalonGui implements ISimDelegate{
                         statisticsTextPane.setText("");
                         createDatasets();
                         frame.setVisible(true);
-                        //TODO
-                        //Vyriesit ako spustat desat krat kvoli grafu
-                        /*for (int i = 0; i < 10; i++){
-                            simulations.get(i).setNumberOfMakeupArtists(Integer.parseInt(numberOfMakeupArtistsTextField.getText()));
-                            simulations.get(i).setNumberOfReceptionists(Integer.parseInt(numberOfReceptionistsTextField.getText()));
-
-                            simulations.get(i).simulateAsync(Integer.parseInt(numberOfReplicationsTextField.getText()));
-                        }*/
                         thread = new Thread(() -> {
                             currentRun = -1;
                             for (int i = 0; i < 10; i++){
@@ -146,12 +138,9 @@ public class BeautySalonGui implements ISimDelegate{
                             }
                         });
                         thread.setDaemon(true);
-                        //thread.setPriority(10);
                         thread.start();
                     }else {
                         simulator.setNumberOfHairstylists(Integer.parseInt(numberOfHairdressersTextField.getText()));
-                        //neviem ako s uknocenim simulacneho behu este. Ci sa deafultne nastavi ovela dlhsi beh a pauzne
-                        // sa niekde v agentoch ked bude cas vacsi ako 17:00 a len sa dobehnu zakaznici ktori su v systeme
                         if (simulator.getTypeOfSimulation() == TypeOfSimulation.OBSERVE){
 
                             simulator.setSimSpeed(
@@ -322,25 +311,6 @@ public class BeautySalonGui implements ISimDelegate{
                 addToChartUntil17(sim.getLengthOfQueueReceptionUntil17().mean(),sim.getNumberOfHairstylists());
             }
         }
-        //TODO
-        /*
-            //aj s grafom
-            String currentText = statisticsTextPane.getText();
-            String newData = currentText + "Cela doba: \n  Priemerna dlzka radu: " +
-                    (Math.round(sim.getGlobalAverageLengthOfReceptionQueue() * 100.0) / 100.0) +
-                    "\n  Pocet kaderniciek: " + sim.getNumberOfHairstylists() + "\n";
-            newData += "Do 17:00: \n  Priemerna dlzka radu: " +
-                    (Math.round(sim.getGlobalUntil17AverageLengthOfReceptionQueue() * 100.0) / 100.0)+
-                    "\n  Pocet kaderniciek: " + sim.getNumberOfHairstylists() + "\n";
-            statisticsTextPane.setText(newData);
-            addToChart(sim.getGlobalAverageLengthOfReceptionQueue(),sim.getNumberOfHairstylists());
-            addToChartUntil17(sim.getGlobalUntil17AverageLengthOfReceptionQueue(),sim.getNumberOfHairstylists());
-            if (sim.isFinished()){
-                fastSimulationRadioButton.setEnabled(true);
-                slowSimulationRadioButton.setEnabled(true);
-                chartOutputRadioButton.setEnabled(true);
-            }
-        }*/
     }
 
     public String getStats(Simulation simulator){

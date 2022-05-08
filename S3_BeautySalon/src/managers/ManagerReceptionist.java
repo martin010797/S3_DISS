@@ -188,7 +188,6 @@ public class ManagerReceptionist extends Manager
 	}
 
 	public void processClosingSalon(MessageForm message){
-		//TODO poslat zakaznikov z radu prec
 		//mazanie zakaznikov z radu(ktori chcu zadavat objednavku)
 		PriorityQueue<Customer> listOfCustomersForPaying = new PriorityQueue<>();
 		while (!myAgent().getReceptionWaitingQueue().isEmpty()){

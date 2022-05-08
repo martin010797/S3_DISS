@@ -20,9 +20,6 @@ public class Customer implements Comparable<Customer>{
     private Personnel chosenPersonnel;
     private double serviceStartTime;
 
-    //TODO asi nakoniec nebude potrebne
-    private boolean leavingUnserved;
-
     public Customer(double arriveTime){
         this.arriveTime = arriveTime;
         currentPosition = CurrentPosition.ARRIVED;
@@ -31,7 +28,6 @@ public class Customer implements Comparable<Customer>{
         cleaning = false;
         isPaying = false;
         arrivedOnCar = false;
-        leavingUnserved = false;
     }
 
     public CurrentPosition getCurrentPosition() {
@@ -120,14 +116,6 @@ public class Customer implements Comparable<Customer>{
 
     public void setServiceStartTime(double serviceStartTime) {
         this.serviceStartTime = serviceStartTime;
-    }
-
-    public boolean isLeavingUnserved() {
-        return leavingUnserved;
-    }
-
-    public void setLeavingUnserved(boolean leavingUnserved) {
-        this.leavingUnserved = leavingUnserved;
     }
 
     @Override
