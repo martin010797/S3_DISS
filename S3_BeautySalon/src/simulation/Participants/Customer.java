@@ -1,7 +1,8 @@
 package simulation.Participants;
 
 import OSPABA.MessageForm;
-import simulation.MyMessage;
+
+import java.util.ArrayList;
 
 public class Customer implements Comparable<Customer>{
     private double arriveTime;
@@ -14,7 +15,16 @@ public class Customer implements Comparable<Customer>{
     private boolean isPaying;
 
     private boolean arrivedOnCar;
-    private int parkingPosition;
+    private int finalParkingNumber;
+    private String finalParkingLine;
+
+    private CurrentParkingPosition currentParkingPosition;
+    private int currentParkingNumber;
+    //spokojnost s parkovanim
+    private int currentCustomerSuccessRateValue;
+
+    //kvoli strategiam, aby vedel ktore rady uz overoval
+    private ArrayList<String> processedLines;
 
     private MessageForm message;
     private Personnel chosenPersonnel;
@@ -28,6 +38,10 @@ public class Customer implements Comparable<Customer>{
         cleaning = false;
         isPaying = false;
         arrivedOnCar = false;
+        processedLines = new ArrayList<>();
+        currentParkingNumber = -1;
+        currentCustomerSuccessRateValue = 0;
+        finalParkingNumber = -1;
     }
 
     public CurrentPosition getCurrentPosition() {
@@ -82,12 +96,12 @@ public class Customer implements Comparable<Customer>{
         this.arrivedOnCar = arrivedOnCar;
     }
 
-    public int getParkingPosition() {
-        return parkingPosition;
+    public int getFinalParkingNumber() {
+        return finalParkingNumber;
     }
 
-    public void setParkingPosition(int parkingPosition) {
-        this.parkingPosition = parkingPosition;
+    public void setFinalParkingNumber(int finalParkingNumber) {
+        this.finalParkingNumber = finalParkingNumber;
     }
 
     public void setArriveTime(double arriveTime) {
@@ -116,6 +130,50 @@ public class Customer implements Comparable<Customer>{
 
     public void setServiceStartTime(double serviceStartTime) {
         this.serviceStartTime = serviceStartTime;
+    }
+
+    public String getFinalParkingLine() {
+        return finalParkingLine;
+    }
+
+    public void setFinalParkingLine(String finalParkingLine) {
+        this.finalParkingLine = finalParkingLine;
+    }
+
+    public CurrentParkingPosition getCurrentParkingPosition() {
+        return currentParkingPosition;
+    }
+
+    public void setCurrentParkingPosition(CurrentParkingPosition currentParkingPosition) {
+        this.currentParkingPosition = currentParkingPosition;
+    }
+
+    public ArrayList<String> getProcessedLines() {
+        return processedLines;
+    }
+
+    public int getCurrentParkingNumber() {
+        return currentParkingNumber;
+    }
+
+    public void setCurrentParkingNumber(int currentParkingNumber) {
+        this.currentParkingNumber = currentParkingNumber;
+    }
+
+    public void setProcessedLines(ArrayList<String> processedLines) {
+        this.processedLines = processedLines;
+    }
+
+    public int getCurrentCustomerSuccessRateValue() {
+        return currentCustomerSuccessRateValue;
+    }
+
+    public void setCurrentCustomerSuccessRateValue(int currentCustomerSuccessRateValue) {
+        this.currentCustomerSuccessRateValue = currentCustomerSuccessRateValue;
+    }
+
+    public void increaseCurrentParkingNumber(){
+        currentParkingNumber++;
     }
 
     @Override

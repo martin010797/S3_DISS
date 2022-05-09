@@ -4,11 +4,16 @@ import OSPABA.*;
 import simulation.*;
 import agents.*;
 import OSPABA.Process;
+import simulation.Participants.Customer;
 
-//meta! id="49"
-public class ProcessLeaving extends Process
+//meta! id="131"
+public class ProcessNextParkingSpot extends Process
 {
-	public ProcessLeaving(int id, Simulation mySim, CommonAgent myAgent)
+	private final double WIDTH_OF_BUILDING = 35;
+	private final int NUMBER_OF_PARKING_SPOTS = 15;
+	private final double SPEED_OF_CAR = 12;
+
+	public ProcessNextParkingSpot(int id, Simulation mySim, CommonAgent myAgent)
 	{
 		super(id, mySim, myAgent);
 	}
@@ -20,13 +25,17 @@ public class ProcessLeaving extends Process
 		// Setup component for the next replication
 	}
 
-	//meta! sender="AgentParking", id="50", type="Start"
+	//meta! sender="AgentParking", id="132", type="Start"
 	public void processStart(MessageForm message)
 	{
-		//TODO ak bude mat final miesto -1 tak len odchod od current miesta
+		double lengthOfDriveToNextParkingSpot =
+				(WIDTH_OF_BUILDING / NUMBER_OF_PARKING_SPOTS)/(((SPEED_OF_CAR*1000)/60)/60);
+		message.setCode(Mc.nextParkingSpotProcessFinished);
+		hold(lengthOfDriveToNextParkingSpot,message);
 	}
 
-	public void processLeavingProcessFinished(MessageForm message){
+	public void processNextParkingSpotProcessFinished(MessageForm message){
+		((MyMessage) message).getCustomer().increaseCurrentParkingNumber();
 		assistantFinished(message);
 	}
 
@@ -35,8 +44,8 @@ public class ProcessLeaving extends Process
 	{
 		switch (message.code())
 		{
-			case Mc.leavingProcessFinished:{
-				processLeavingProcessFinished(message);
+			case Mc.nextParkingSpotProcessFinished:{
+				processNextParkingSpotProcessFinished(message);
 				break;
 			}
 		}

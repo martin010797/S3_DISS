@@ -5,10 +5,10 @@ import simulation.*;
 import agents.*;
 import OSPABA.Process;
 
-//meta! id="49"
-public class ProcessLeaving extends Process
+//meta! id="135"
+public class ProcessFromEntranceToCar extends Process
 {
-	public ProcessLeaving(int id, Simulation mySim, CommonAgent myAgent)
+	public ProcessFromEntranceToCar(int id, Simulation mySim, CommonAgent myAgent)
 	{
 		super(id, mySim, myAgent);
 	}
@@ -20,13 +20,12 @@ public class ProcessLeaving extends Process
 		// Setup component for the next replication
 	}
 
-	//meta! sender="AgentParking", id="50", type="Start"
+	//meta! sender="AgentParking", id="136", type="Start"
 	public void processStart(MessageForm message)
 	{
-		//TODO ak bude mat final miesto -1 tak len odchod od current miesta
 	}
 
-	public void processLeavingProcessFinished(MessageForm message){
+	public void processFromEntranceToCarProcessFinished(MessageForm message){
 		assistantFinished(message);
 	}
 
@@ -35,8 +34,8 @@ public class ProcessLeaving extends Process
 	{
 		switch (message.code())
 		{
-			case Mc.leavingProcessFinished:{
-				processLeavingProcessFinished(message);
+			case Mc.fromEntranceToCarProcessFinished:{
+				processFromEntranceToCarProcessFinished(message);
 				break;
 			}
 		}

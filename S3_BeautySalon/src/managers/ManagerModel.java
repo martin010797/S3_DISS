@@ -34,8 +34,7 @@ public class ManagerModel extends Manager
 		if (((MyMessage) message).getCustomer() != null){
 			Customer customer = ((MyMessage) message).getCustomer();
 			//pridanie zakaznika do poctu a do aktualnych zakaznikov v systeme
-			//TODO odkomentuje sa po doplnenia fungovania parkovania
-			/*myAgent().addCustomerToStats();
+			myAgent().addCustomerToStats();
 			myAgent().getListOfCustomersInSystem().add(customer);
 			if (customer.isArrivedOnCar()){
 				customer.setCurrentPosition(CurrentPosition.PARKING);
@@ -46,14 +45,15 @@ public class ManagerModel extends Manager
 				message.setCode(Mc.serveCustomer);
 				message.setAddressee(mySim().findAgent(Id.agentBeautySalon));
 				request(message);
-			}*/
-			if (!customer.isArrivedOnCar()) {
+			}
+			//toto bolo len pre fungovanie bez parkoviska
+			/*if (!customer.isArrivedOnCar()) {
 				myAgent().addCustomerToStats();
 				myAgent().getListOfCustomersInSystem().add(customer);
 				message.setCode(Mc.serveCustomer);
 				message.setAddressee(mySim().findAgent(Id.agentBeautySalon));
 				request(message);
-			}
+			}*/
 		}
 	}
 
@@ -68,7 +68,7 @@ public class ManagerModel extends Manager
 			//ti co prisli na aute musia este odist autom z parkoviska
 			//TODO
 		}
-		//vypnutie symulacie ak uz nie je nikto v systeme
+		//vypnutie simulacie ak uz nie je nikto v systeme
 		if (((MySimulation) mySim()).getTypeOfSimulation() == TypeOfSimulation.OBSERVE
 				&& mySim().currentTime() >= 28800
 				&& myAgent().getListOfCustomersInSystem().isEmpty()){
@@ -79,6 +79,25 @@ public class ManagerModel extends Manager
 	//meta! sender="AgentParking", id="66", type="Response"
 	public void processParking(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		if (customer.getFinalParkingNumber() == -1){
+			//nepodarilo sa mu zaparkovat
+			myAgent().getListOfCustomersInSystem().remove(customer);
+		}else {
+			//podarilo sa mu zaparkovat
+			//nastavenie prichodu az sem lebo to je pre statistiky na dlzku v systeme
+			customer.setArriveTime(mySim().currentTime());
+			//posiela do beauty salonu
+			message.setCode(Mc.serveCustomer);
+			message.setAddressee(mySim().findAgent(Id.agentBeautySalon));
+			request(message);
+		}
+		//vypnutie simulacie ak uz nie je nikto v systeme
+		if (((MySimulation) mySim()).getTypeOfSimulation() == TypeOfSimulation.OBSERVE
+				&& mySim().currentTime() >= 28800
+				&& myAgent().getListOfCustomersInSystem().isEmpty()){
+			mySim().stopSimulation();
+		}
 	}
 
 	//meta! sender="AgentParking", id="68", type="Response"

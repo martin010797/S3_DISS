@@ -31,4 +31,8 @@ public class Id extends IdList
 	//meta! tag="end"
 
 	public static final int processClosing = 1012;
+	public static final int processToCrossroad = 1013;
+	public static final int processNextParkingSpot = 1014;
+	public static final int processToEntrance = 1015;
+	public static final int processFromEntranceToCar = 1016;
 }

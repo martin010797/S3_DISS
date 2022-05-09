@@ -4,6 +4,7 @@ package simulation;
 import OSPABA.*;
 import OSPStat.Stat;
 import agents.*;
+import simulation.Participants.CurrentParkingPosition;
 import simulation.Participants.CurrentPosition;
 
 import java.util.ArrayList;
@@ -20,6 +21,9 @@ public class MySimulation extends Simulation
 	private int numberOfReceptionists;
 	private int numberOfMakeupArtists;
 	private int numberOfHairstylists;
+
+	private ParkingStrategy chosenStrategy;
+	private int numberOfBuiltParkingLines;
 
 	//globalne statistiky
 	private Stat timeInSystem;
@@ -66,6 +70,8 @@ public class MySimulation extends Simulation
 		agentHairstylist().setNumberOfHairstylists(numberOfHairstylists);
 		//agentBeautySalon().setNumberOfMakeupArtists(numberOfMakeupArtists);
 		agentMakeUpArtist().setNumberOfMakeupArtists(numberOfMakeupArtists);
+		agentParking().setChosenStrategy(chosenStrategy);
+		agentParking().setNumberOfBuiltParkingLines(numberOfBuiltParkingLines);
 		super.prepareReplication();
 		// Reset entities, queues, local statistics, etc...
 	}
@@ -173,6 +179,38 @@ public class MySimulation extends Simulation
 		}
 	}
 
+	public String convertCurrentParkingPosition(CurrentParkingPosition currentParkingPosition){
+		switch (currentParkingPosition){
+			case DETOUR:{
+				return "Obchadzka";
+			}
+			case ARRIVAL_ROAD:{
+				return "Prijazdova cesta";
+			}
+			case LINE_A:{
+				return "Rad A";
+			}
+			case LINE_B:{
+				return "Rad B";
+			}
+			case LINE_C:{
+				return "Rad C";
+			}
+			case LEAVING:{
+				return "Odchadza";
+			}
+			case WALKING_TO_CAR:{
+				return "Kraca k autu";
+			}
+			case WALKING_TO_ENTRANCE:{
+				return "Kraca ku vchodu";
+			}
+			default:{
+				return "Nezname";
+			}
+		}
+	}
+
 	public TypeOfSimulation getTypeOfSimulation() {
 		return typeOfSimulation;
 	}
@@ -223,6 +261,14 @@ public class MySimulation extends Simulation
 
 	public Stat getLengthOfQueueReceptionUntil17() {
 		return lengthOfQueueReceptionUntil17;
+	}
+
+	public void setChosenStrategy(ParkingStrategy chosenStrategy) {
+		this.chosenStrategy = chosenStrategy;
+	}
+
+	public void setNumberOfBuiltParkingLines(int numberOfBuiltParkingLines) {
+		this.numberOfBuiltParkingLines = numberOfBuiltParkingLines;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

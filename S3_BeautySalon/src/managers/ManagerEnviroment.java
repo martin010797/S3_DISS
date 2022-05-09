@@ -43,15 +43,15 @@ public class ManagerEnviroment extends Manager
 	}
 
 	public void processInit(MessageForm message){
+		//TODO aktualne nech chodia iba autom
 		//prichody peso
-		MyMessage messageOnFoot = new MyMessage(mySim());
+		/*MyMessage messageOnFoot = new MyMessage(mySim());
 		messageOnFoot.setAddressee(myAgent().findAssistant(Id.schedulerOfArrivalsOnFoot));
-		startContinualAssistant(messageOnFoot);
+		startContinualAssistant(messageOnFoot);*/
 		//prichody autom
-		//TODO zatial nech chodia iba peso
-		/*MyMessage messageOnCar = new MyMessage(mySim());
+		MyMessage messageOnCar = new MyMessage(mySim());
 		messageOnCar.setAddressee(myAgent().findAssistant(Id.schedulerOfArrivalsOnCar));
-		startContinualAssistant(messageOnCar);*/
+		startContinualAssistant(messageOnCar);
 	}
 
 	//meta! userInfo="Process messages defined in code", id="0"

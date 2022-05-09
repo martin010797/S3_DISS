@@ -15,16 +15,17 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYSeries;
 import simulation.MySimulation;
-import simulation.Participants.Customer;
-import simulation.Participants.Hairstylist;
-import simulation.Participants.MakeUpArtist;
-import simulation.Participants.Receptionist;
+import simulation.ParkingStrategy;
+import simulation.Participants.*;
 import simulation.TypeOfSimulation;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class BeautySalonGui implements ISimDelegate{
@@ -54,11 +55,15 @@ public class BeautySalonGui implements ISimDelegate{
     private JTextPane statisticsTextPane;
     private JTextPane statesOfSystemTextPane;
     private JLabel isPausedLabel;
-    private JLabel calendarLabel;
-    private JLabel lastProcesseedEventTextLabel;
-    private JLabel lastProcessedEventLabel;
-    private JTextPane calendarTextPane;
+    private JLabel parkingSuccessRateLabel;
+    private JLabel arrivedOnCarLabel;
+    private JLabel unsuccesfulParkingCountLabel;
     private JRadioButton chartOutputRadioButton;
+    private JTable parkingTable;
+    private JComboBox parkingStrategyCombobox;
+    private JComboBox numberOfParkingLinesComboBox;
+    private JLabel parkingStrategyLabel;
+    private JLabel numberOfParkingLinesLabel;
 
     private DefaultXYDataset datasetLineChart;
     private XYSeries lineChartXYSeries;
@@ -69,9 +74,10 @@ public class BeautySalonGui implements ISimDelegate{
     //private String lastCalendar;
     private String lastStats;
 
-    private ArrayList<MySimulation> simulations = new ArrayList<>();
+    //private ArrayList<MySimulation> simulations = new ArrayList<>();
     private Thread thread;
     private int currentRun;
+    private String[][] parkingSpots;
 
     public BeautySalonGui() {
         frame = new JFrame("Beauty salon");
@@ -105,7 +111,7 @@ public class BeautySalonGui implements ISimDelegate{
 
         setDeafultText();
 
-        for (int i = 0; i < 10; i++){
+        /*for (int i = 0; i < 10; i++){
             MySimulation sim = new MySimulation();
             sim.registerDelegate(this);
             sim.setTypeOfSimulation(TypeOfSimulation.MAX_WITH_CHART);
@@ -114,7 +120,10 @@ public class BeautySalonGui implements ISimDelegate{
             sim.setNumberOfHairstylists(i+1);
 
             simulations.add(sim);
-        }
+        }*/
+
+        createParkingTable();
+        createComboBoxes();
         startSimulationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -125,6 +134,8 @@ public class BeautySalonGui implements ISimDelegate{
                     isPausedLabel.setVisible(false);
                     simulator.setNumberOfMakeupArtists(Integer.parseInt(numberOfMakeupArtistsTextField.getText()));
                     simulator.setNumberOfReceptionists(Integer.parseInt(numberOfReceptionistsTextField.getText()));
+                    setParkingStrategy(simulator);
+                    setNumberOfBuiltParkingLines(simulator);
                     if (simulator.getTypeOfSimulation() == TypeOfSimulation.MAX_WITH_CHART){
                         statisticsTextPane.setText("");
                         createDatasets();
@@ -240,6 +251,26 @@ public class BeautySalonGui implements ISimDelegate{
                 simulator.setMaxSimSpeed();
             }
         });
+        parkingTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                int column = parkingTable.getSelectedColumn();
+                int row = parkingTable.getSelectedRow();
+                if (parkingTable.getValueAt(row, column) == " "){
+                    boolean result = simulator.agentParking().reserveParkingSpotByUser(row,column,true);
+                    if (result){
+                        parkingTable.setValueAt("R", row, column);
+                    }
+                }else {
+                    boolean result = simulator.agentParking().reserveParkingSpotByUser(row,column,false);
+                    if (result){
+                        parkingTable.setValueAt(" ", row, column);
+                    }
+                }
+                parkingTable.clearSelection();
+            }
+        });
     }
 
     @Override
@@ -285,6 +316,8 @@ public class BeautySalonGui implements ISimDelegate{
                 statesOfSystemTextPane.setText(statesOfSystem);
                 lastStatesValues = statesOfSystemTextPane.getText();
             }
+
+            showParkingSpots(sim);
 
             String stats = getStats(sim);
             if (!stats.equals(lastStats)){
@@ -335,7 +368,9 @@ public class BeautySalonGui implements ISimDelegate{
                 "Rad pred upravou ucesu: " + sim.agentHairstylist().getHairstyleWaitingQueue().size()
                 + " \n  Rad pred licenim: " + sim.agentMakeUpArtist().getMakeupWaitingQueue().size()
                 + "\nPocet prichodov zakaznikov: " + sim.agentModel().getNumberOfArrivedCustomers()
-                + "\nPocet zakaznikov, ktori vstupili dovnutra: " + sim.agentBeautySalon().getNumberOfArrivedCustomers() +
+                + "\nPocet zakaznikov, ktori vstupili dovnutra: " + sim.agentBeautySalon().getNumberOfArrivedCustomers()
+                + "\nPocet zakaznikov, ktori nezaparkovali a odisli: "
+                + sim.agentParking().getLeavingBecauseOfUnsuccessfulParking() +
                 "\nPocet obsluzenych zakaznikov: " + sim.agentBeautySalon().getNumberOfServedCustomers()
                 +" \nPocet odchodov po zatvaracke: " + sim.agentBeautySalon().getNumberOfLeavingCustomers()
                 + "\nStavy personalu: ";
@@ -391,11 +426,67 @@ public class BeautySalonGui implements ISimDelegate{
                 }
                 result += "\n  Zakaznik: \n    Cas prichodu: " + sim.convertTimeOfSystem(c.getArriveTime()) +
                         "\n    Aktualne miesto v systeme: " +
-                        sim.convertCurrentPosition(c.getCurrentPosition()) +
-                        "\n    Momentalne ma zaujem este o sluzby: " + wantedServices;
+                        sim.convertCurrentPosition(c.getCurrentPosition());
+                if (c.getCurrentPosition() == CurrentPosition.PARKING){
+                    result += "\n    Miesto na parkovisku: "
+                            + sim.convertCurrentParkingPosition(c.getCurrentParkingPosition());
+                }
+                result += "\n    Momentalne ma zaujem este o sluzby: " + wantedServices;
             }
         }
         return result;
+    }
+
+    private void showParkingSpots(Simulation simulator){
+        MySimulation sim = (MySimulation) simulator;
+        boolean[] lineA = sim.agentParking().getArrayOfParkingSpots_A();
+        boolean[] lineB = sim.agentParking().getArrayOfParkingSpots_B();
+        boolean[] lineC = sim.agentParking().getArrayOfParkingSpots_C();
+        boolean[] lineReservedA = sim.agentParking().getArrayOfParkingSpots_A_ReservedByUser();
+        boolean[] lineReservedB = sim.agentParking().getArrayOfParkingSpots_B_ReservedByUser();
+        boolean[] lineReservedC = sim.agentParking().getArrayOfParkingSpots_C_ReservedByUser();
+        for (int i = 0; i < 15; i++){
+            int column = 14 - i;
+            int row = 0;
+            boolean parkingSpot = lineA[i];
+            if (parkingSpot){
+                if (lineReservedA[i]){
+                    parkingTable.setValueAt("R", row, column);
+                }else {
+                    parkingTable.setValueAt("---", row, column);
+                }
+            }else {
+                parkingTable.setValueAt(" ", row, column);
+            }
+        }
+        for (int i = 0; i < 15; i++){
+            int column = 14 - i;
+            int row = 1;
+            boolean parkingSpot = lineB[i];
+            if (parkingSpot){
+                if (lineReservedB[i]){
+                    parkingTable.setValueAt("R", row, column);
+                }else {
+                    parkingTable.setValueAt("---", row, column);
+                }
+            }else {
+                parkingTable.setValueAt(" ", row, column);
+            }
+        }
+        for (int i = 0; i < 15; i++){
+            int column = 14 - i;
+            int row = 2;
+            boolean parkingSpot = lineC[i];
+            if (parkingSpot){
+                if (lineReservedC[i]){
+                    parkingTable.setValueAt("R", row, column);
+                }else {
+                    parkingTable.setValueAt("---", row, column);
+                }
+            }else {
+                parkingTable.setValueAt(" ", row, column);
+            }
+        }
     }
 
     private String getTotalTimeFromSeconds(double pSeconds){
@@ -493,9 +584,67 @@ public class BeautySalonGui implements ISimDelegate{
         datasetLineChart.addSeries(lineChartXYSeriesUntil17.getKey(), lineChartXYSeriesUntil17.toArray());
     }
 
+    private void setParkingStrategy(Simulation simulator){
+        MySimulation sim = (MySimulation) simulator;
+        switch (parkingStrategyCombobox.getSelectedIndex()){
+            case 0:{
+                sim.setChosenStrategy(ParkingStrategy.FIRST_STRATEGY);
+                break;
+            }
+            case 1:{
+                sim.setChosenStrategy(ParkingStrategy.SECOND_STRATEGY);
+                break;
+            }
+            case 2:{
+                sim.setChosenStrategy(ParkingStrategy.THIRD_STRATEGY);
+                break;
+            }
+        }
+    }
+
+    private void setNumberOfBuiltParkingLines(Simulation simulator){
+        MySimulation sim = (MySimulation) simulator;
+        switch (numberOfParkingLinesComboBox.getSelectedIndex()){
+            case 0:{
+                sim.setNumberOfBuiltParkingLines(1);
+                break;
+            }
+            case 1:{
+                sim.setNumberOfBuiltParkingLines(2);
+                break;
+            }
+            case 2:{
+                sim.setNumberOfBuiltParkingLines(3);
+                break;
+            }
+        }
+    }
+
+    private void createParkingTable(){
+        parkingSpots = new String[][]{
+                {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
+                {" ", " ", " ", " ", " ", "", " ", " ", " ", " ", " ", " ", " ", " ", " "},
+                {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "}
+        };
+        parkingTable.setModel(new DefaultTableModel(
+                parkingSpots,
+                new String[]{"15","14","13","12","11","10","9","8","7","6","5","4","3","2","1"}
+        ));
+        TableColumnModel columnModel = parkingTable.getColumnModel();
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        for (int i = 0; i < 15; i++){
+            columnModel.getColumn(i).setCellRenderer(centerRenderer);
+        }
+    }
+
+    private void createComboBoxes(){
+        numberOfParkingLinesComboBox.setModel(new DefaultComboBoxModel(new String[]{"1","2","3"}));
+        parkingStrategyCombobox.setModel(new DefaultComboBoxModel(new String[]{"1 strategia", "2. strategia", "3. strategia"}));
+    }
+
     private void setDeafultText(){
-        lastProcessedEventLabel.setText("-");
-        calendarTextPane.setText("");
+        //unsuccesfulParkingCountLabel.setText("-");
         isPausedLabel.setVisible(false);
         simulationTimeLabel.setText(simulator.getCurrentTime());
         numberOfMakeupArtistsTextField.setText("1");
@@ -510,7 +659,6 @@ public class BeautySalonGui implements ISimDelegate{
         statesOfSystemTextPane.setText(text);
         statisticsTextPane.setText("Statistiky");
         lastStatesValues = statesOfSystemTextPane.getText();
-        //lastCalendar = calendarTextPane.getText();
         lastStats = statisticsTextPane.getText();
     }
 }

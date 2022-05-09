@@ -30,4 +30,9 @@ public class Mc extends IdList
 	public static final int tryServeCustomerFromQueue = 11;
 	public static final int closingProcessFinished = 12;
 	public static final int closingSalon = 13;
+	public static final int leavingProcessFinished = 14;
+	public static final int fromEntranceToCarProcessFinished = 15;
+	public static final int nextParkingSpotProcessFinished = 16;
+	public static final int toCrossroadProcessFinished = 17;
+	public static final int toEntranceProcessFinished = 18;
 }
