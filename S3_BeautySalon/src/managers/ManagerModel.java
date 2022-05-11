@@ -37,6 +37,7 @@ public class ManagerModel extends Manager
 			myAgent().addCustomerToStats();
 			myAgent().getListOfCustomersInSystem().add(customer);
 			if (customer.isArrivedOnCar()){
+				myAgent().addArrivedCarToStats();
 				customer.setCurrentPosition(CurrentPosition.PARKING);
 				message.setCode(Mc.parking);
 				message.setAddressee(mySim().findAgent(Id.agentParking));
@@ -66,7 +67,9 @@ public class ManagerModel extends Manager
 			myAgent().getListOfCustomersInSystem().remove(customer);
 		}else {
 			//ti co prisli na aute musia este odist autom z parkoviska
-			//TODO
+			message.setCode(Mc.leavingCarPark);
+			message.setAddressee(mySim().findAgent(Id.agentParking));
+			request(message);
 		}
 		//vypnutie simulacie ak uz nie je nikto v systeme
 		if (((MySimulation) mySim()).getTypeOfSimulation() == TypeOfSimulation.OBSERVE
@@ -103,8 +106,9 @@ public class ManagerModel extends Manager
 	//meta! sender="AgentParking", id="68", type="Response"
 	public void processLeavingCarPark(MessageForm message)
 	{
-		//TODO
 		//vymazanie zakaznika zo systemu
+		Customer customer = ((MyMessage) message).getCustomer();
+		myAgent().getListOfCustomersInSystem().remove(customer);
 
 		if (((MySimulation) mySim()).getTypeOfSimulation() == TypeOfSimulation.OBSERVE
 				&& mySim().currentTime() >= 28800

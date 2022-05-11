@@ -43,11 +43,10 @@ public class ManagerEnviroment extends Manager
 	}
 
 	public void processInit(MessageForm message){
-		//TODO aktualne nech chodia iba autom
 		//prichody peso
-		/*MyMessage messageOnFoot = new MyMessage(mySim());
+		MyMessage messageOnFoot = new MyMessage(mySim());
 		messageOnFoot.setAddressee(myAgent().findAssistant(Id.schedulerOfArrivalsOnFoot));
-		startContinualAssistant(messageOnFoot);*/
+		startContinualAssistant(messageOnFoot);
 		//prichody autom
 		MyMessage messageOnCar = new MyMessage(mySim());
 		messageOnCar.setAddressee(myAgent().findAssistant(Id.schedulerOfArrivalsOnCar));

@@ -11,5 +11,6 @@ public enum CurrentPosition {
     HAIR_STYLING,
     IN_QUEUE_FOR_PAY,
     PAYING,
-    PARKING
+    PARKING,
+    LEAVING
 }

@@ -64,6 +64,7 @@ public class BeautySalonGui implements ISimDelegate{
     private JComboBox numberOfParkingLinesComboBox;
     private JLabel parkingStrategyLabel;
     private JLabel numberOfParkingLinesLabel;
+    private JLabel parkingSuccessRateValueLabel;
 
     private DefaultXYDataset datasetLineChart;
     private XYSeries lineChartXYSeries;
@@ -424,10 +425,14 @@ public class BeautySalonGui implements ISimDelegate{
                 if (c.isMakeup()){
                     wantedServices += "Licenie";
                 }
-                result += "\n  Zakaznik: \n    Cas prichodu: " + sim.convertTimeOfSystem(c.getArriveTime()) +
-                        "\n    Aktualne miesto v systeme: " +
+                result += "\n  Zakaznik: \n    Cas prichodu: " + sim.convertTimeOfSystem(c.getArriveTime());
+                if (c.getFinalParkingNumber() != -1){
+                    result += "\n    Parkovacie miesto: " + c.getFinalParkingLine() + (c.getFinalParkingNumber()+1);
+                }
+                result +=  "\n    Aktualne miesto v systeme: " +
                         sim.convertCurrentPosition(c.getCurrentPosition());
-                if (c.getCurrentPosition() == CurrentPosition.PARKING){
+                if ((c.getCurrentPosition() == CurrentPosition.PARKING)
+                        || (c.getCurrentPosition() == CurrentPosition.LEAVING)){
                     result += "\n    Miesto na parkovisku: "
                             + sim.convertCurrentParkingPosition(c.getCurrentParkingPosition());
                 }
@@ -487,6 +492,14 @@ public class BeautySalonGui implements ISimDelegate{
                 parkingTable.setValueAt(" ", row, column);
             }
         }
+        double arrivedOnCar = sim.agentModel().getArrivedOnCar();
+        double unsuccessfulParking = sim.agentParking().getLeavingBecauseOfUnsuccessfulParking();
+        arrivedOnCarLabel.setText("Prislo na aute: "+ (int) arrivedOnCar);
+        unsuccesfulParkingCountLabel.setText("Nezaparkovalo: " + (int) unsuccessfulParking);
+        parkingSuccessRateLabel.setText("Uspesnost zaparkovania: "
+                + Math.round(((arrivedOnCar - unsuccessfulParking)/arrivedOnCar)*100.0 * 100.0) / 100.0 + "%");
+        parkingSuccessRateValueLabel.setText("Spokojnost so zaparkovanim: "
+                + sim.agentParking().getCustomersSuccessRateValues().mean());
     }
 
     private String getTotalTimeFromSeconds(double pSeconds){
@@ -527,7 +540,11 @@ public class BeautySalonGui implements ISimDelegate{
                 ">\n    Priemerny pocet v rade pred recepciou: " +
                 Math.round(sim.getLengthOfQueueReception().mean() * 100.0) / 100.0 +
                 "\n    Priemerny cas cakania v rade na zadanie objednavky: " +
-                getTotalTimeFromSeconds(sim.getWaitTimeForPlacingOrder().mean());
+                getTotalTimeFromSeconds(sim.getWaitTimeForPlacingOrder().mean())
+                + "\n    Priemerna spokojnost zakaznika s parkovanim: "
+                + Math.round(sim.getCustomersSuccesRates().mean() * 100.0) / 100.0
+                + "\n    Priemerna uspesnost zaparkovania: "
+                + Math.round(sim.getParkingSuccessRatePercentage().mean() * 100.0) / 100.0 + "%";
         result += "\n  Iba do 17:00: \n    Cislo replikacie: " + sim.currentReplication() +
                 "\n    Priemerny cas zakaznika v systeme: " +
                 getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().mean()) +
@@ -538,7 +555,11 @@ public class BeautySalonGui implements ISimDelegate{
                 ">\n    Priemerny pocet v rade pred recepciou: " +
                 Math.round(sim.getLengthOfQueueReceptionUntil17().mean() * 100.0) / 100.0 +
                 "\n    Priemerny cas cakania v rade na zadanie objednavky: " +
-                getTotalTimeFromSeconds(sim.getWaitTimeForPlacingOrder().mean());
+                getTotalTimeFromSeconds(sim.getWaitTimeForPlacingOrder().mean())
+                + "\n    Priemerna spokojnost zakaznika s parkovanim: "
+                + Math.round(sim.getCustomersSuccesRates().mean() * 100.0) / 100.0
+                + "\n    Priemerna uspesnost zaparkovania: "
+                + Math.round(sim.getParkingSuccessRatePercentage().mean() * 100.0) / 100.0 + "%";
         //pre poslednu replikaciu
         result += "\nPosledna replikacia(celkovy cas): \n";
         result += "  Priemerny cas zakaznika v systeme: "

@@ -2,6 +2,7 @@ package agents;
 
 import OSPABA.*;
 import OSPRNG.UniformContinuousRNG;
+import OSPStat.Stat;
 import simulation.*;
 import managers.*;
 import continualAssistants.*;
@@ -13,7 +14,6 @@ public class AgentParking extends Agent
 {
 	private Random seedGenerator;
 	private UniformContinuousRNG speedOfWalkingGenerator;
-	//TODO generator pre rychlost chodze
 
 	private ParkingStrategy chosenStrategy;
 	private int numberOfBuiltParkingLines;
@@ -27,8 +27,9 @@ public class AgentParking extends Agent
 
 	//stats
 	private int leavingBecauseOfUnsuccessfulParking;
+	//spokojnosti s parkovanim
+	private Stat customersSuccessRateValues;
 
-	//TODO parkovanie zapracovat az po rozbehani salonu
 	public AgentParking(int id, Simulation mySim, Agent parent)
 	{
 		super(id, mySim, parent);
@@ -70,6 +71,7 @@ public class AgentParking extends Agent
 			}
 		}
 		leavingBecauseOfUnsuccessfulParking = 0;
+		customersSuccessRateValues = new Stat();
 	}
 
 	public Random getSeedGenerator() {
@@ -200,6 +202,10 @@ public class AgentParking extends Agent
 
 	public UniformContinuousRNG getSpeedOfWalkingGenerator() {
 		return speedOfWalkingGenerator;
+	}
+
+	public Stat getCustomersSuccessRateValues() {
+		return customersSuccessRateValues;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

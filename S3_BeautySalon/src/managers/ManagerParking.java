@@ -45,15 +45,29 @@ public class ManagerParking extends Manager
 	//meta! sender="ProcessLeaving", id="50", type="Finish"
 	public void processFinishProcessLeaving(MessageForm message)
 	{
+		Customer customer = ((MyMessage) message).getCustomer();
+		if (customer.getFinalParkingNumber() == -1){
+			//nezaparkoval a odchadza
+			message.setCode(Mc.parking);
+			response(message);
+		}else {
+			//vyparkoval a odchadza
+			message.setCode(Mc.leavingCarPark);
+			response(message);
+		}
 	}
 
 	//meta! sender="AgentModel", id="68", type="Request"
 	public void processLeavingCarPark(MessageForm message)
 	{
+		message.setAddressee(myAgent().findAssistant(Id.processFromEntranceToCar));
+		startContinualAssistant(message);
 	}
 
 	public void processFinishProcessToEntrance(MessageForm message)
 	{
+		myAgent().getCustomersSuccessRateValues().addSample(
+				((MyMessage) message).getCustomer().getCurrentCustomerSuccessRateValue());
 		message.setCode(Mc.parking);
 		response(message);
 	}
@@ -88,7 +102,6 @@ public class ManagerParking extends Manager
 						}else {
 							//este nebol v rade A
 							//bude prechadzat miesta v rade A
-							//TODO bud nastavovat tu alebo az pri prejdeni po posledne miseto resp. ked zaparkuje
 							customer.getProcessedLines().add("A");
 							message.setAddressee(myAgent().findAssistant(Id.processNextParkingSpot));
 							startContinualAssistant(message);
@@ -150,11 +163,12 @@ public class ManagerParking extends Manager
 
 	public void processFinishProcessFromEntranceToCar(MessageForm message)
 	{
+		message.setAddressee(myAgent().findAssistant(Id.processLeaving));
+		startContinualAssistant(message);
 	}
 
 	public void processFinishProcessNextParkingSpot(MessageForm message)
 	{
-		//TODO
 		Customer customer = ((MyMessage) message).getCustomer();
 		switch (myAgent().getChosenStrategy()){
 			case FIRST_STRATEGY:{
@@ -177,11 +191,12 @@ public class ManagerParking extends Manager
 							if (customer.getCurrentParkingNumber() == 14){
 								//je na poslednom mieste v rade tak bud obchadzka alebo odchod
 								if (myAgent().getNumberOfBuiltParkingLines() == 1){
-									//TODO toto nie je dobre lebo este sa nemodeluje odchod. Asi sa pre to prida dalsi proces
 									//odchod lebo presiel cely rad A a je vybudovany iba tento rad
 									myAgent().addToLeavingBecauseOfUnsuccessfulParking();
-									message.setCode(Mc.parking);
-									response(message);
+									message.setAddressee(myAgent().findAssistant(Id.processLeaving));
+									startContinualAssistant(message);
+									/*message.setCode(Mc.parking);
+									response(message);*/
 								}else if (myAgent().getNumberOfBuiltParkingLines() == 2){
 									if (customer.getProcessedLines().contains("B")){
 										//presiel uz aj A aj B a dalsie nie su vybudovane tak odchadza
@@ -198,8 +213,10 @@ public class ManagerParking extends Manager
 											&& customer.getProcessedLines().contains("C")){
 										//presiel vsetky rady tak odchod
 										myAgent().addToLeavingBecauseOfUnsuccessfulParking();
-										message.setCode(Mc.parking);
-										response(message);
+										message.setAddressee(myAgent().findAssistant(Id.processLeaving));
+										startContinualAssistant(message);
+										/*message.setCode(Mc.parking);
+										response(message);*/
 									}else{
 										//obchadzka
 										message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
@@ -234,8 +251,10 @@ public class ManagerParking extends Manager
 									if (customer.getProcessedLines().contains("A")){
 										//presiel uz aj A aj B a dalsie nie su vybudovane tak odchadza
 										myAgent().addToLeavingBecauseOfUnsuccessfulParking();
-										message.setCode(Mc.parking);
-										response(message);
+										message.setAddressee(myAgent().findAssistant(Id.processLeaving));
+										startContinualAssistant(message);
+										/*message.setCode(Mc.parking);
+										response(message);*/
 									}else {
 										//obchadzka
 										message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
@@ -246,8 +265,10 @@ public class ManagerParking extends Manager
 											&& customer.getProcessedLines().contains("C")){
 										//presiel vsetky rady tak odchod
 										myAgent().addToLeavingBecauseOfUnsuccessfulParking();
-										message.setCode(Mc.parking);
-										response(message);
+										message.setAddressee(myAgent().findAssistant(Id.processLeaving));
+										startContinualAssistant(message);
+										/*message.setCode(Mc.parking);
+										response(message);*/
 									}else{
 										//obchadzka
 										message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
@@ -283,8 +304,10 @@ public class ManagerParking extends Manager
 										&& customer.getProcessedLines().contains("B")){
 									//odchod
 									myAgent().addToLeavingBecauseOfUnsuccessfulParking();
-									message.setCode(Mc.parking);
-									response(message);
+									message.setAddressee(myAgent().findAssistant(Id.processLeaving));
+									startContinualAssistant(message);
+									/*message.setCode(Mc.parking);
+									response(message);*/
 								}else {
 									//obchadzka
 									message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));

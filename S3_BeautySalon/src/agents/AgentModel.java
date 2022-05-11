@@ -14,6 +14,7 @@ public class AgentModel extends Agent
 {
 	private List<Customer> listOfCustomersInSystem;
 	private int numberOfArrivedCustomers;
+	private int arrivedOnCar;
 
 	public AgentModel(int id, Simulation mySim, Agent parent)
 	{
@@ -29,6 +30,7 @@ public class AgentModel extends Agent
 		// Setup component for the next replication
 		listOfCustomersInSystem = new ArrayList<>();
 		numberOfArrivedCustomers = 0;
+		arrivedOnCar = 0;
 
 		MyMessage message = new MyMessage(mySim());
 		message.setCode(Mc.init);
@@ -46,6 +48,14 @@ public class AgentModel extends Agent
 
 	public void addCustomerToStats(){
 		numberOfArrivedCustomers++;
+	}
+
+	public int getArrivedOnCar() {
+		return arrivedOnCar;
+	}
+
+	public void addArrivedCarToStats(){
+		arrivedOnCar++;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

@@ -31,6 +31,10 @@ public class MySimulation extends Simulation
 	private Stat waitTimeForPlacingOrder;
 	private Stat timeInSystemUntil17;
 	private Stat lengthOfQueueReceptionUntil17;
+	//spokojnosti s parkovanim
+	private Stat customersSuccesRates;
+	//kolko percent zakazikov zaparkovalo
+	private Stat parkingSuccessRatePercentage;
 
 	private Random seedGenerator;
 
@@ -59,6 +63,8 @@ public class MySimulation extends Simulation
 		waitTimeForPlacingOrder = new Stat();
 		timeInSystemUntil17 = new Stat();
 		lengthOfQueueReceptionUntil17 = new Stat();
+		customersSuccesRates = new Stat();
+		parkingSuccessRatePercentage = new Stat();
 	}
 
 	@Override
@@ -86,6 +92,10 @@ public class MySimulation extends Simulation
 		lengthOfQueueReception.addSample(agentReceptionist().getLengthOfReceptionQueue().mean());
 		waitTimeForPlacingOrder.addSample(agentReceptionist().getWaitTimeForPlacingOrder().mean());
 		lengthOfQueueReceptionUntil17.addSample(agentReceptionist().getLengthOfQueueUntil17());
+		customersSuccesRates.addSample(agentParking().getCustomersSuccessRateValues().mean());
+		double arrivedOnCar = agentModel().getArrivedOnCar();
+		double unsuccessfulParking = agentParking().getLeavingBecauseOfUnsuccessfulParking();
+		parkingSuccessRatePercentage.addSample(((arrivedOnCar - unsuccessfulParking)/arrivedOnCar)*100.0);
 		super.replicationFinished();
 		if (typeOfSimulation == TypeOfSimulation.MAX_SPEED){
 			refreshGui();
@@ -172,6 +182,9 @@ public class MySimulation extends Simulation
 			}
 			case PARKING:{
 				return "Parkovanie";
+			}
+			case LEAVING:{
+				return "Odchod autom";
 			}
 			default:{
 				return "Nezname";
@@ -269,6 +282,14 @@ public class MySimulation extends Simulation
 
 	public void setNumberOfBuiltParkingLines(int numberOfBuiltParkingLines) {
 		this.numberOfBuiltParkingLines = numberOfBuiltParkingLines;
+	}
+
+	public Stat getCustomersSuccesRates() {
+		return customersSuccesRates;
+	}
+
+	public Stat getParkingSuccessRatePercentage() {
+		return parkingSuccessRatePercentage;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

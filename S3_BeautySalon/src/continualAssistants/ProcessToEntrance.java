@@ -29,7 +29,6 @@ public class ProcessToEntrance extends Process
 	//meta! sender="AgentParking", id="134", type="Start"
 	public void processStart(MessageForm message)
 	{
-		//TODO este overit ten pohyb chodcov ci to je takto spravne
 		Customer customer = ((MyMessage) message).getCustomer();
 		customer.setCurrentParkingPosition(CurrentParkingPosition.WALKING_TO_ENTRANCE);
 		double distanceToWalk = 0;
