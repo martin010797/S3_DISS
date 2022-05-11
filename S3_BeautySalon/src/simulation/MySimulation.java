@@ -35,6 +35,10 @@ public class MySimulation extends Simulation
 	private Stat customersSuccesRates;
 	//kolko percent zakazikov zaparkovalo
 	private Stat parkingSuccessRatePercentage;
+	private Stat servedCustomers;
+	private Stat leftAfterClosing;
+	private Stat unsuccessfulParking;
+	private Stat arrivedOnCar;
 
 	private Random seedGenerator;
 
@@ -65,6 +69,10 @@ public class MySimulation extends Simulation
 		lengthOfQueueReceptionUntil17 = new Stat();
 		customersSuccesRates = new Stat();
 		parkingSuccessRatePercentage = new Stat();
+		servedCustomers = new Stat();
+		leftAfterClosing = new Stat();
+		unsuccessfulParking = new Stat();
+		arrivedOnCar = new Stat();
 	}
 
 	@Override
@@ -93,9 +101,13 @@ public class MySimulation extends Simulation
 		waitTimeForPlacingOrder.addSample(agentReceptionist().getWaitTimeForPlacingOrder().mean());
 		lengthOfQueueReceptionUntil17.addSample(agentReceptionist().getLengthOfQueueUntil17());
 		customersSuccesRates.addSample(agentParking().getCustomersSuccessRateValues().mean());
-		double arrivedOnCar = agentModel().getArrivedOnCar();
-		double unsuccessfulParking = agentParking().getLeavingBecauseOfUnsuccessfulParking();
-		parkingSuccessRatePercentage.addSample(((arrivedOnCar - unsuccessfulParking)/arrivedOnCar)*100.0);
+		double arriveOnCar = agentModel().getArrivedOnCar();
+		double unsuccessfulPark = agentParking().getLeavingBecauseOfUnsuccessfulParking();
+		parkingSuccessRatePercentage.addSample(((arriveOnCar - unsuccessfulPark)/arriveOnCar)*100.0);
+		servedCustomers.addSample(agentBeautySalon().getNumberOfServedCustomers());
+		leftAfterClosing.addSample(agentBeautySalon().getNumberOfLeavingCustomers());
+		unsuccessfulParking.addSample(agentParking().getLeavingBecauseOfUnsuccessfulParking());
+		arrivedOnCar.addSample(agentModel().getArrivedOnCar());
 		super.replicationFinished();
 		if (typeOfSimulation == TypeOfSimulation.MAX_SPEED){
 			refreshGui();
@@ -290,6 +302,22 @@ public class MySimulation extends Simulation
 
 	public Stat getParkingSuccessRatePercentage() {
 		return parkingSuccessRatePercentage;
+	}
+
+	public Stat getServedCustomers() {
+		return servedCustomers;
+	}
+
+	public Stat getLeftAfterClosing() {
+		return leftAfterClosing;
+	}
+
+	public Stat getUnsuccessfulParking() {
+		return unsuccessfulParking;
+	}
+
+	public Stat getArrivedOnCar() {
+		return arrivedOnCar;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

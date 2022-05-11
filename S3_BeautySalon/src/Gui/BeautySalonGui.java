@@ -531,21 +531,28 @@ public class BeautySalonGui implements ISimDelegate{
     private String getGlobalStatsAndForCurrentReplication(Simulation simulator){
         MySimulation sim = (MySimulation) simulator;
         //celkove statistiky
-        String result = "Globalne statistiky: \n  Celkovo: \n    Cislo replikacie: " + sim.currentReplication() +
+        String result = "Globalne statistiky: "
+                + "\n  Cislo replikacie: " + sim.currentReplication()
+                + "\n  Priemerne obsluzenych zakaznikov: " + Math.round(sim.getServedCustomers().mean() * 100.0) / 100.0
+                + "\n  Priemerne odchodov po zatvaracke: " + Math.round(sim.getLeftAfterClosing().mean() * 100.0) / 100.0
+                + "\n  Priemerne prislo na aute: " + Math.round(sim.getArrivedOnCar().mean() * 100.0) / 100.0
+                + "\n  Priemerne nezaparkovalo: " + Math.round(sim.getUnsuccessfulParking().mean() * 100.0) / 100.0
+                + "\n  Priemerny cas cakania v rade na zadanie objednavky: " +
+                getTotalTimeFromSeconds(sim.getWaitTimeForPlacingOrder().mean())
+                + "\n  Priemerna spokojnost zakaznika s parkovanim: "
+                + Math.round(sim.getCustomersSuccesRates().mean() * 100.0) / 100.0
+                + "\n  Priemerna uspesnost zaparkovania: "
+                + Math.round(sim.getParkingSuccessRatePercentage().mean() * 100.0) / 100.0 + "%"
+                + "\n"
+                + "\n  Celkovo:" +
                 "\n    Priemerny cas zakaznika v systeme: " + getTotalTimeFromSeconds(sim.getTimeInSystem().mean()) +
                 "\n      Smerodajna odchylka: " + getTotalTimeFromSeconds(sim.getTimeInSystem().stdev()) +
                 "\n      90% Interval spolahlivosti: <"
                 + getTotalTimeFromSeconds(sim.getTimeInSystem().confidenceInterval_90()[0])
                 + ", " + getTotalTimeFromSeconds(sim.getTimeInSystem().confidenceInterval_90()[1]) +
                 ">\n    Priemerny pocet v rade pred recepciou: " +
-                Math.round(sim.getLengthOfQueueReception().mean() * 100.0) / 100.0 +
-                "\n    Priemerny cas cakania v rade na zadanie objednavky: " +
-                getTotalTimeFromSeconds(sim.getWaitTimeForPlacingOrder().mean())
-                + "\n    Priemerna spokojnost zakaznika s parkovanim: "
-                + Math.round(sim.getCustomersSuccesRates().mean() * 100.0) / 100.0
-                + "\n    Priemerna uspesnost zaparkovania: "
-                + Math.round(sim.getParkingSuccessRatePercentage().mean() * 100.0) / 100.0 + "%";
-        result += "\n  Iba do 17:00: \n    Cislo replikacie: " + sim.currentReplication() +
+                Math.round(sim.getLengthOfQueueReception().mean() * 100.0) / 100.0;
+        result += "\n  Iba do 17:00:" +
                 "\n    Priemerny cas zakaznika v systeme: " +
                 getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().mean()) +
                 "\n      Smerodajna odchylka: " + getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().stdev())
@@ -553,13 +560,7 @@ public class BeautySalonGui implements ISimDelegate{
                 getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().confidenceInterval_90()[0]) +
                 ", " + getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().confidenceInterval_90()[1]) +
                 ">\n    Priemerny pocet v rade pred recepciou: " +
-                Math.round(sim.getLengthOfQueueReceptionUntil17().mean() * 100.0) / 100.0 +
-                "\n    Priemerny cas cakania v rade na zadanie objednavky: " +
-                getTotalTimeFromSeconds(sim.getWaitTimeForPlacingOrder().mean())
-                + "\n    Priemerna spokojnost zakaznika s parkovanim: "
-                + Math.round(sim.getCustomersSuccesRates().mean() * 100.0) / 100.0
-                + "\n    Priemerna uspesnost zaparkovania: "
-                + Math.round(sim.getParkingSuccessRatePercentage().mean() * 100.0) / 100.0 + "%";
+                Math.round(sim.getLengthOfQueueReceptionUntil17().mean() * 100.0) / 100.0;
         //pre poslednu replikaciu
         result += "\nPosledna replikacia(celkovy cas): \n";
         result += "  Priemerny cas zakaznika v systeme: "
