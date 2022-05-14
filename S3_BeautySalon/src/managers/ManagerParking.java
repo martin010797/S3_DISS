@@ -242,18 +242,6 @@ public class ManagerParking extends Manager
 								}
 							}
 						}
-						/*if (customer.getProcessedLines().contains("A")){
-							//ak uz bol v rade A
-							//prechod k radu B
-							message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
-							startContinualAssistant(message);
-						}else {
-							//este nebol v rade A
-							//bude prechadzat miesta v rade A
-							customer.getProcessedLines().add("A");
-							message.setAddressee(myAgent().findAssistant(Id.processNextParkingSpot));
-							startContinualAssistant(message);
-						}*/
 						break;
 					}
 					case LINE_B:{
@@ -296,18 +284,6 @@ public class ManagerParking extends Manager
 								}
 							}
 						}
-						/*if (customer.getProcessedLines().contains("B")){
-							//ak uz predtym bol v rade B
-							//prechod k radu C
-							message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
-							startContinualAssistant(message);
-						}else {
-							//este nebol v rade B
-							//bude prechadzat miesta v rade B
-							customer.getProcessedLines().add("B");
-							message.setAddressee(myAgent().findAssistant(Id.processNextParkingSpot));
-							startContinualAssistant(message);
-						}*/
 						break;
 					}
 					case LINE_C:{
@@ -325,14 +301,21 @@ public class ManagerParking extends Manager
 				break;
 			}
 			case THIRD_STRATEGY:{
-				//TODO
 				switch (customer.getCurrentParkingPosition()){
 					case LINE_A:{
 						if (customer.getProcessedLines().contains("A")){
 							//ak uz bol v rade A
-							//prechod k radu B
-							message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
-							startContinualAssistant(message);
+							if (customer.getGoToParkingRowAgain().equals("A")){
+								//ak tam videl volne miesto a chce ist znova
+								customer.setCrossingSecondTime(true);
+								customer.setGoToParkingRowAgain("");
+								message.setAddressee(myAgent().findAssistant(Id.processNextParkingSpot));
+								startContinualAssistant(message);
+							}else {
+								//prechod k radu B
+								message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
+								startContinualAssistant(message);
+							}
 						}else {
 							//este nebol v rade A
 							//bude prechadzat miesta v rade A
@@ -345,9 +328,17 @@ public class ManagerParking extends Manager
 					case LINE_B:{
 						if (customer.getProcessedLines().contains("B")){
 							//ak uz predtym bol v rade B
-							//prechod k radu C
-							message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
-							startContinualAssistant(message);
+							if (customer.getGoToParkingRowAgain().equals("B")){
+								//ak tam videl volne miesto a chce ist znova
+								customer.setCrossingSecondTime(true);
+								customer.setGoToParkingRowAgain("");
+								message.setAddressee(myAgent().findAssistant(Id.processNextParkingSpot));
+								startContinualAssistant(message);
+							}else {
+								//prechod k radu C
+								message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
+								startContinualAssistant(message);
+							}
 						}else {
 							//este nebol v rade B
 							//bude prechadzat miesta v rade B
@@ -362,6 +353,10 @@ public class ManagerParking extends Manager
 						if (!customer.getProcessedLines().contains("C")){
 							//pridanie ze uz sa kontroloval rad C
 							customer.getProcessedLines().add("C");
+						}
+						if (customer.getGoToParkingRowAgain().equals("C")){
+							customer.setCrossingSecondTime(true);
+							customer.setGoToParkingRowAgain("");
 						}
 						//bude prechadzat miesta v rade C
 						message.setAddressee(myAgent().findAssistant(Id.processNextParkingSpot));
@@ -408,14 +403,12 @@ public class ManagerParking extends Manager
 									myAgent().addToLeavingBecauseOfUnsuccessfulParking();
 									message.setAddressee(myAgent().findAssistant(Id.processLeaving));
 									startContinualAssistant(message);
-									/*message.setCode(Mc.parking);
-									response(message);*/
 								}else if (myAgent().getNumberOfBuiltParkingLines() == 2){
 									if (customer.getProcessedLines().contains("B")){
 										//presiel uz aj A aj B a dalsie nie su vybudovane tak odchadza
 										myAgent().addToLeavingBecauseOfUnsuccessfulParking();
-										message.setCode(Mc.parking);
-										response(message);
+										message.setAddressee(myAgent().findAssistant(Id.processLeaving));
+										startContinualAssistant(message);
 									}else {
 										//obchadzka
 										message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
@@ -428,8 +421,6 @@ public class ManagerParking extends Manager
 										myAgent().addToLeavingBecauseOfUnsuccessfulParking();
 										message.setAddressee(myAgent().findAssistant(Id.processLeaving));
 										startContinualAssistant(message);
-										/*message.setCode(Mc.parking);
-										response(message);*/
 									}else{
 										//obchadzka
 										message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
@@ -466,8 +457,6 @@ public class ManagerParking extends Manager
 										myAgent().addToLeavingBecauseOfUnsuccessfulParking();
 										message.setAddressee(myAgent().findAssistant(Id.processLeaving));
 										startContinualAssistant(message);
-										/*message.setCode(Mc.parking);
-										response(message);*/
 									}else {
 										//obchadzka
 										message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
@@ -480,8 +469,6 @@ public class ManagerParking extends Manager
 										myAgent().addToLeavingBecauseOfUnsuccessfulParking();
 										message.setAddressee(myAgent().findAssistant(Id.processLeaving));
 										startContinualAssistant(message);
-										/*message.setCode(Mc.parking);
-										response(message);*/
 									}else{
 										//obchadzka
 										message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
@@ -519,8 +506,6 @@ public class ManagerParking extends Manager
 									myAgent().addToLeavingBecauseOfUnsuccessfulParking();
 									message.setAddressee(myAgent().findAssistant(Id.processLeaving));
 									startContinualAssistant(message);
-									/*message.setCode(Mc.parking);
-									response(message);*/
 								}else {
 									//obchadzka
 									message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
@@ -574,8 +559,8 @@ public class ManagerParking extends Manager
 									if (customer.getProcessedLines().contains("B")){
 										//presiel uz aj A aj B a dalsie nie su vybudovane tak odchadza
 										myAgent().addToLeavingBecauseOfUnsuccessfulParking();
-										message.setCode(Mc.parking);
-										response(message);
+										message.setAddressee(myAgent().findAssistant(Id.processLeaving));
+										startContinualAssistant(message);
 									}else {
 										//obchadzka
 										message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
@@ -710,13 +695,12 @@ public class ManagerParking extends Manager
 				break;
 			}
 			case THIRD_STRATEGY:{
-				//TODO
 				switch (customer.getCurrentParkingPosition()){
 					case LINE_A:{
 						if (!myAgent().getArrayOfParkingSpots_A()[customer.getCurrentParkingNumber()]){
 							//je volne parkovacie miesto tak sa rozhoduje ci tam zaparkuje
-							boolean parkHere = decideToParkByCustomerPreferences(customer);
-							if (parkHere){
+							if (customer.isCrossingSecondTime()){
+								//prechadza tento rad znova lebo predtym videl park. miesto kam nezaparkoval
 								//parkuje
 								customer.setFinalParkingLine("A");
 								customer.setFinalParkingNumber(customer.getCurrentParkingNumber());
@@ -728,30 +712,60 @@ public class ManagerParking extends Manager
 								message.setAddressee(myAgent().findAssistant(Id.processToEntrance));
 								startContinualAssistant(message);
 							}else {
-								//ide na dalsie miesto
-								//zakaznik si zapamata ze videl volne miesto a nezaparkoval tam
-								customer.setGoToParkingRowAgain("A");
-								message.setAddressee(myAgent().findAssistant(Id.processNextParkingSpot));
-								startContinualAssistant(message);
+								boolean parkHere = decideToParkByCustomerPreferences(customer);
+								if (parkHere){
+									//parkuje
+									customer.setFinalParkingLine("A");
+									customer.setFinalParkingNumber(customer.getCurrentParkingNumber());
+									myAgent().getArrayOfParkingSpots_A()[customer.getCurrentParkingNumber()] = true;
+									//nastavenie spokojnosti s parkovanim
+									int successRate = customer.getCurrentCustomerSuccessRateValue();
+									successRate += (15 - customer.getCurrentParkingNumber());
+									customer.setCurrentCustomerSuccessRateValue(successRate);
+									message.setAddressee(myAgent().findAssistant(Id.processToEntrance));
+									startContinualAssistant(message);
+								}else {
+									//ide na dalsie miesto
+									//zakaznik si zapamata ze videl volne miesto a nezaparkoval tam
+									customer.setGoToParkingRowAgain("A");
+									message.setAddressee(myAgent().findAssistant(Id.processNextParkingSpot));
+									startContinualAssistant(message);
+								}
 							}
 						}else {
 							//nie je volne
-							//TODO tu budu zmeny ak budem menit sposob fungovania strategie
 							if (customer.getCurrentParkingNumber() == 14){
 								//je na poslednom mieste v rade tak bud obchadzka alebo odchod
 								if (myAgent().getNumberOfBuiltParkingLines() == 1){
-									//odchod lebo presiel cely rad A a je vybudovany iba tento rad
-									myAgent().addToLeavingBecauseOfUnsuccessfulParking();
-									message.setAddressee(myAgent().findAssistant(Id.processLeaving));
-									startContinualAssistant(message);
+									if (customer.isCrossingSecondTime()){
+										//odchod lebo presiel cely druhy raz A(nikeot mu obsadil miesto pocas obchadzky)
+										// a je vybudovany iba tento rad
+										myAgent().addToLeavingBecauseOfUnsuccessfulParking();
+										message.setAddressee(myAgent().findAssistant(Id.processLeaving));
+										startContinualAssistant(message);
+									}else {
+										if (customer.getGoToParkingRowAgain().equals("A")){
+											//videl volne miesto v tomto rade tak obchadzka
+											message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
+											startContinualAssistant(message);
+										}else {
+											//nevidel volne parkovacie miesto tak odchod
+											myAgent().addToLeavingBecauseOfUnsuccessfulParking();
+											message.setAddressee(myAgent().findAssistant(Id.processLeaving));
+											startContinualAssistant(message);
+										}
+									}
 								}else if (myAgent().getNumberOfBuiltParkingLines() == 2){
 									if (customer.getProcessedLines().contains("B")){
 										//presiel uz aj A aj B a dalsie nie su vybudovane tak odchadza
 										myAgent().addToLeavingBecauseOfUnsuccessfulParking();
-										message.setCode(Mc.parking);
-										response(message);
+										message.setAddressee(myAgent().findAssistant(Id.processLeaving));
+										startContinualAssistant(message);
 									}else {
 										//obchadzka
+										if (customer.isCrossingSecondTime()){
+											customer.setCrossingSecondTime(false);
+										}
 										message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
 										startContinualAssistant(message);
 									}
@@ -764,6 +778,9 @@ public class ManagerParking extends Manager
 										startContinualAssistant(message);
 									}else{
 										//obchadzka
+										if (customer.isCrossingSecondTime()){
+											customer.setCrossingSecondTime(false);
+										}
 										message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
 										startContinualAssistant(message);
 									}
@@ -779,8 +796,8 @@ public class ManagerParking extends Manager
 					case LINE_B:{
 						if (!myAgent().getArrayOfParkingSpots_B()[customer.getCurrentParkingNumber()]){
 							//je volne parkovacie miesto tak sa rozhoduje ci tam zaparkuje
-							boolean parkHere = decideToParkByCustomerPreferences(customer);
-							if (parkHere){
+							if (customer.isCrossingSecondTime()){
+								//prechadza tento rad znova lebo predtym videl park. miesto kam nezaparkoval
 								//parkuje
 								customer.setFinalParkingLine("B");
 								customer.setFinalParkingNumber(customer.getCurrentParkingNumber());
@@ -792,38 +809,65 @@ public class ManagerParking extends Manager
 								message.setAddressee(myAgent().findAssistant(Id.processToEntrance));
 								startContinualAssistant(message);
 							}else {
-								//ide na dalsie miesto
-								message.setAddressee(myAgent().findAssistant(Id.processNextParkingSpot));
-								startContinualAssistant(message);
+								boolean parkHere = decideToParkByCustomerPreferences(customer);
+								if (parkHere){
+									//parkuje
+									customer.setFinalParkingLine("B");
+									customer.setFinalParkingNumber(customer.getCurrentParkingNumber());
+									myAgent().getArrayOfParkingSpots_B()[customer.getCurrentParkingNumber()] = true;
+									//nastavenie spokojnosti s parkovanim
+									int successRate = customer.getCurrentCustomerSuccessRateValue();
+									successRate += 15 + (15 - customer.getCurrentParkingNumber());
+									customer.setCurrentCustomerSuccessRateValue(successRate);
+									message.setAddressee(myAgent().findAssistant(Id.processToEntrance));
+									startContinualAssistant(message);
+								}else {
+									//ide na dalsie miesto
+									//zakaznik si zapamata ze videl volne miesto a nezaparkoval tam
+									customer.setGoToParkingRowAgain("B");
+									message.setAddressee(myAgent().findAssistant(Id.processNextParkingSpot));
+									startContinualAssistant(message);
+								}
 							}
 						}else {
 							//nie je volne
 							if (customer.getCurrentParkingNumber() == 14){
 								//je na poslednom mieste v rade tak bud obchadzka alebo odchod
 								if (myAgent().getNumberOfBuiltParkingLines() == 2){
-									if (customer.getProcessedLines().contains("A")){
-										//presiel uz aj A aj B a dalsie nie su vybudovane tak odchadza
+									if (customer.isCrossingSecondTime()){
+										//odchod lebo presiel cely druhy raz B(niekto mu obsadil miesto pocas obchadzky)
+										// a dalsi rad nie je vybudovany
 										myAgent().addToLeavingBecauseOfUnsuccessfulParking();
 										message.setAddressee(myAgent().findAssistant(Id.processLeaving));
 										startContinualAssistant(message);
-										/*message.setCode(Mc.parking);
-										response(message);*/
 									}else {
-										//obchadzka
-										message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
-										startContinualAssistant(message);
+										if (customer.getGoToParkingRowAgain().equals("B")){
+											//videl volne miesto v tomto rade tak obchadzka
+											if (customer.isCrossingSecondTime()){
+												customer.setCrossingSecondTime(false);
+											}
+											message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
+											startContinualAssistant(message);
+										}else {
+											//nevidel volne parkovacie miesto tak odchod
+											myAgent().addToLeavingBecauseOfUnsuccessfulParking();
+											message.setAddressee(myAgent().findAssistant(Id.processLeaving));
+											startContinualAssistant(message);
+										}
 									}
 								}else {
+									//su vybudovane 3 rady
 									if (customer.getProcessedLines().contains("A")
 											&& customer.getProcessedLines().contains("C")){
 										//presiel vsetky rady tak odchod
 										myAgent().addToLeavingBecauseOfUnsuccessfulParking();
 										message.setAddressee(myAgent().findAssistant(Id.processLeaving));
 										startContinualAssistant(message);
-										/*message.setCode(Mc.parking);
-										response(message);*/
 									}else{
 										//obchadzka
+										if (customer.isCrossingSecondTime()){
+											customer.setCrossingSecondTime(false);
+										}
 										message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
 										startContinualAssistant(message);
 									}
@@ -839,8 +883,8 @@ public class ManagerParking extends Manager
 					case LINE_C:{
 						if (!myAgent().getArrayOfParkingSpots_C()[customer.getCurrentParkingNumber()]){
 							//je volne parkovacie miesto tak sa rozhoduje ci tam zaparkuje
-							boolean parkHere = decideToParkByCustomerPreferences(customer);
-							if (parkHere){
+							if (customer.isCrossingSecondTime()){
+								//prechadza tento rad znova lebo predtym videl park. miesto kam nezaparkoval
 								//parkuje
 								customer.setFinalParkingLine("C");
 								customer.setFinalParkingNumber(customer.getCurrentParkingNumber());
@@ -852,25 +896,48 @@ public class ManagerParking extends Manager
 								message.setAddressee(myAgent().findAssistant(Id.processToEntrance));
 								startContinualAssistant(message);
 							}else {
-								//ide na dalsie miesto
-								message.setAddressee(myAgent().findAssistant(Id.processNextParkingSpot));
-								startContinualAssistant(message);
+								boolean parkHere = decideToParkByCustomerPreferences(customer);
+								if (parkHere){
+									//parkuje
+									customer.setFinalParkingLine("C");
+									customer.setFinalParkingNumber(customer.getCurrentParkingNumber());
+									myAgent().getArrayOfParkingSpots_C()[customer.getCurrentParkingNumber()] = true;
+									//nastavenie spokojnosti s parkovanim
+									int successRate = customer.getCurrentCustomerSuccessRateValue();
+									successRate += 30 + (15 - customer.getCurrentParkingNumber());
+									customer.setCurrentCustomerSuccessRateValue(successRate);
+									message.setAddressee(myAgent().findAssistant(Id.processToEntrance));
+									startContinualAssistant(message);
+								}else {
+									//ide na dalsie miesto
+									//zakaznik si zapamata ze videl volne miesto a nezaparkoval tam
+									customer.setGoToParkingRowAgain("C");
+									message.setAddressee(myAgent().findAssistant(Id.processNextParkingSpot));
+									startContinualAssistant(message);
+								}
 							}
 						}else {
 							//nie je volne
 							if (customer.getCurrentParkingNumber() == 14){
-								//je na poslednom mieste v rade tak bud obchadzka alebo odchod
-								//je v rade C tak nemusim kontrolovat pocet vybudovanych radov
-								if (customer.getProcessedLines().contains("A")
-										&& customer.getProcessedLines().contains("B")){
-									//odchod
+								if (customer.isCrossingSecondTime()){
+									//odchod lebo presiel cely druhy raz C(niekto mu obsadil miesto pocas obchadzky)
 									myAgent().addToLeavingBecauseOfUnsuccessfulParking();
 									message.setAddressee(myAgent().findAssistant(Id.processLeaving));
 									startContinualAssistant(message);
 								}else {
-									//obchadzka
-									message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
-									startContinualAssistant(message);
+									if (customer.getGoToParkingRowAgain().equals("C")){
+										//videl volne miesto v tomto rade tak obchadzka
+										if (customer.isCrossingSecondTime()){
+											customer.setCrossingSecondTime(false);
+										}
+										message.setAddressee(myAgent().findAssistant(Id.processToCrossroad));
+										startContinualAssistant(message);
+									}else {
+										//nevidel volne parkovacie miesto tak odchod
+										myAgent().addToLeavingBecauseOfUnsuccessfulParking();
+										message.setAddressee(myAgent().findAssistant(Id.processLeaving));
+										startContinualAssistant(message);
+									}
 								}
 							}else {
 								//nie je na poslednom mieste v rade tak prechadza na dalsie miesto
