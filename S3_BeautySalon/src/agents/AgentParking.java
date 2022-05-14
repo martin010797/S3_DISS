@@ -14,6 +14,10 @@ public class AgentParking extends Agent
 {
 	private Random seedGenerator;
 	private UniformContinuousRNG speedOfWalkingGenerator;
+	private Random spotsOneToFiveGenerator;
+	private Random spotsSixToTenGenerator;
+	private Random spotsElevenToThirteenGenerator;
+	private Random goToNextLineGenerator;
 
 	private ParkingStrategy chosenStrategy;
 	private int numberOfBuiltParkingLines;
@@ -85,6 +89,10 @@ public class AgentParking extends Agent
 
 	private void prepareGenerators(){
 		speedOfWalkingGenerator = new UniformContinuousRNG(-0.7,0.7, new Random(seedGenerator.nextInt()));
+		spotsOneToFiveGenerator = new Random(seedGenerator.nextInt());
+		spotsSixToTenGenerator = new Random(seedGenerator.nextInt());
+		spotsElevenToThirteenGenerator = new Random(seedGenerator.nextInt());
+		goToNextLineGenerator = new Random(seedGenerator.nextInt());
 	}
 
 	public ParkingStrategy getChosenStrategy() {
@@ -206,6 +214,22 @@ public class AgentParking extends Agent
 
 	public Stat getCustomersSuccessRateValues() {
 		return customersSuccessRateValues;
+	}
+
+	public Random getSpotsOneToFiveGenerator() {
+		return spotsOneToFiveGenerator;
+	}
+
+	public Random getSpotsSixToTenGenerator() {
+		return spotsSixToTenGenerator;
+	}
+
+	public Random getSpotsElevenToThirteenGenerator() {
+		return spotsElevenToThirteenGenerator;
+	}
+
+	public Random getGoToNextLineGenerator() {
+		return goToNextLineGenerator;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

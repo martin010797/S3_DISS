@@ -427,7 +427,8 @@ public class BeautySalonGui implements ISimDelegate{
                 }
                 result += "\n  Zakaznik: \n    Cas prichodu: " + sim.convertTimeOfSystem(c.getArriveTime());
                 if (c.getFinalParkingNumber() != -1){
-                    result += "\n    Parkovacie miesto: " + c.getFinalParkingLine() + (c.getFinalParkingNumber()+1);
+                    result += "\n    Parkovacie miesto: " + c.getFinalParkingLine() + (c.getFinalParkingNumber()+1)
+                            + "\n    Spokojnost s parkovanim: " + c.getCurrentCustomerSuccessRateValue();
                 }
                 result +=  "\n    Aktualne miesto v systeme: " +
                         sim.convertCurrentPosition(c.getCurrentPosition());
