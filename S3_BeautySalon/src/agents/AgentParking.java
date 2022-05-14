@@ -18,6 +18,7 @@ public class AgentParking extends Agent
 	private Random spotsSixToTenGenerator;
 	private Random spotsElevenToThirteenGenerator;
 	private Random goToNextLineGenerator;
+	private Random skippedParkingSpotsGenerator;
 
 	private ParkingStrategy chosenStrategy;
 	private int numberOfBuiltParkingLines;
@@ -93,6 +94,7 @@ public class AgentParking extends Agent
 		spotsSixToTenGenerator = new Random(seedGenerator.nextInt());
 		spotsElevenToThirteenGenerator = new Random(seedGenerator.nextInt());
 		goToNextLineGenerator = new Random(seedGenerator.nextInt());
+		skippedParkingSpotsGenerator = new Random(seedGenerator.nextInt());
 	}
 
 	public ParkingStrategy getChosenStrategy() {
@@ -230,6 +232,10 @@ public class AgentParking extends Agent
 
 	public Random getGoToNextLineGenerator() {
 		return goToNextLineGenerator;
+	}
+
+	public Random getSkippedParkingSpotsGenerator() {
+		return skippedParkingSpotsGenerator;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

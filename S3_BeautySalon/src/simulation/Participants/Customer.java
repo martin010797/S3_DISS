@@ -30,6 +30,10 @@ public class Customer implements Comparable<Customer>{
     private Personnel chosenPersonnel;
     private double serviceStartTime;
 
+    private int skipNumberOfParkingSpots;
+    private String goToParkingRowAgain;
+    private boolean crossingSecondTime;
+
     public Customer(double arriveTime){
         this.arriveTime = arriveTime;
         currentPosition = CurrentPosition.ARRIVED;
@@ -42,6 +46,9 @@ public class Customer implements Comparable<Customer>{
         currentParkingNumber = -1;
         currentCustomerSuccessRateValue = 0;
         finalParkingNumber = -1;
+        skipNumberOfParkingSpots = 0;
+        crossingSecondTime = false;
+        goToParkingRowAgain = "";
     }
 
     public CurrentPosition getCurrentPosition() {
@@ -174,6 +181,30 @@ public class Customer implements Comparable<Customer>{
 
     public void increaseCurrentParkingNumber(){
         currentParkingNumber++;
+    }
+
+    public int getSkipNumberOfParkingSpots() {
+        return skipNumberOfParkingSpots;
+    }
+
+    public void setSkipNumberOfParkingSpots(int skipNumberOfParkingSpots) {
+        this.skipNumberOfParkingSpots = skipNumberOfParkingSpots;
+    }
+
+    public String getGoToParkingRowAgain() {
+        return goToParkingRowAgain;
+    }
+
+    public void setGoToParkingRowAgain(String goToParkingRowAgain) {
+        this.goToParkingRowAgain = goToParkingRowAgain;
+    }
+
+    public boolean isCrossingSecondTime() {
+        return crossingSecondTime;
+    }
+
+    public void setCrossingSecondTime(boolean crossingSecondTime) {
+        this.crossingSecondTime = crossingSecondTime;
     }
 
     @Override

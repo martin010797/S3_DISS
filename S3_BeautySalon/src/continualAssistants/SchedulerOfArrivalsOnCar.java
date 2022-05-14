@@ -43,7 +43,6 @@ public class SchedulerOfArrivalsOnCar extends Scheduler
 			MessageForm copyMessage = message.createCopy();
 			hold(myAgent().getCarArrivalsGenerator().sample(),copyMessage);
 		}
-		//TODO mysliet na to ze tento zakaznik musi este parkovat a az potom sa mu pocita cas v systeme
 		Customer customer = new Customer(_mySim.currentTime());
 		customer.setArrivedOnCar(true);
 		((MyMessage) message).setCustomer(customer);
