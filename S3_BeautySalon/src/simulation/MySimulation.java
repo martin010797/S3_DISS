@@ -28,6 +28,8 @@ public class MySimulation extends Simulation
 	//globalne statistiky
 	private Stat timeInSystem;
 	private Stat lengthOfQueueReception;
+	private Stat lengthOfQueueHairstyle;
+	private Stat lengthOfQueueMakeUp;
 	private Stat waitTimeForPlacingOrder;
 	private Stat timeInSystemUntil17;
 	private Stat lengthOfQueueReceptionUntil17;
@@ -64,6 +66,8 @@ public class MySimulation extends Simulation
 		// Create global statistcis
 		timeInSystem = new Stat();
 		lengthOfQueueReception = new Stat();
+		lengthOfQueueHairstyle = new Stat();
+		lengthOfQueueMakeUp = new Stat();
 		waitTimeForPlacingOrder = new Stat();
 		timeInSystemUntil17 = new Stat();
 		lengthOfQueueReceptionUntil17 = new Stat();
@@ -98,6 +102,8 @@ public class MySimulation extends Simulation
 		timeInSystemUntil17.addSample(agentBeautySalon().getTimeInSystemUntil17().mean());
 		agentReceptionist().getLengthOfReceptionQueue().addSample(agentReceptionist().getReceptionWaitingQueue().size());
 		lengthOfQueueReception.addSample(agentReceptionist().getLengthOfReceptionQueue().mean());
+		lengthOfQueueHairstyle.addSample(agentHairstylist().getHairstyleWaitingQueue().lengthStatistic().mean());
+		lengthOfQueueMakeUp.addSample(agentMakeUpArtist().getMakeupWaitingQueue().lengthStatistic().mean());
 		waitTimeForPlacingOrder.addSample(agentReceptionist().getWaitTimeForPlacingOrder().mean());
 		lengthOfQueueReceptionUntil17.addSample(agentReceptionist().getLengthOfQueueUntil17());
 		customersSuccesRates.addSample(agentParking().getCustomersSuccessRateValues().mean());
@@ -318,6 +324,14 @@ public class MySimulation extends Simulation
 
 	public Stat getArrivedOnCar() {
 		return arrivedOnCar;
+	}
+
+	public Stat getLengthOfQueueHairstyle() {
+		return lengthOfQueueHairstyle;
+	}
+
+	public Stat getLengthOfQueueMakeUp() {
+		return lengthOfQueueMakeUp;
 	}
 
 	//meta! userInfo="Generated code: do not modify", tag="begin"

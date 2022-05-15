@@ -356,7 +356,11 @@ public class BeautySalonGui implements ISimDelegate{
                 + sim.agentReceptionist().getNumberOfStartedOrders()+ " zadanych objednavok";
 
         result += "\nPriemerny pocet v rade pred recepciou: "
-                + Math.round(sim.agentReceptionist().getLengthOfReceptionQueue().mean() * 100.0) / 100.0;
+                + Math.round(sim.agentReceptionist().getLengthOfReceptionQueue().mean() * 100.0) / 100.0
+                + "\nPriemerny pocet v rade pred licenim: "
+                + Math.round(sim.agentMakeUpArtist().getMakeupWaitingQueue().lengthStatistic().mean() * 100.0) / 100.0
+                + "\nPriemerny pocet v rade pred ucesom: "
+                + Math.round(sim.agentHairstylist().getHairstyleWaitingQueue().lengthStatistic().mean() * 100.0) / 100.0;
         return result;
     }
 
@@ -551,7 +555,11 @@ public class BeautySalonGui implements ISimDelegate{
                 + getTotalTimeFromSeconds(sim.getTimeInSystem().confidenceInterval_90()[0])
                 + ", " + getTotalTimeFromSeconds(sim.getTimeInSystem().confidenceInterval_90()[1]) +
                 ">\n    Priemerny pocet v rade pred recepciou: " +
-                Math.round(sim.getLengthOfQueueReception().mean() * 100.0) / 100.0;
+                Math.round(sim.getLengthOfQueueReception().mean() * 100.0) / 100.0
+                + "\n    Priemerny pocet v rade pred licenim: " +
+                Math.round(sim.getLengthOfQueueMakeUp().mean() * 100.0) / 100.0
+                + "\n    Priemerny pocet v rade pred ucesom: " +
+                Math.round(sim.getLengthOfQueueHairstyle().mean() * 100.0) / 100.0;
         result += "\n  Iba do 17:00:" +
                 "\n    Priemerny cas zakaznika v systeme: " +
                 getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().mean()) +
