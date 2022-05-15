@@ -26,6 +26,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class BeautySalonGui implements ISimDelegate{
@@ -579,7 +581,128 @@ public class BeautySalonGui implements ISimDelegate{
                 + "\n  " + sim.agentReceptionist().getNumberOfStartedOrders() + " zadanych objednavok";
         result += "\n  Priemerny pocet v rade pred recepciou: "
                 + Math.round(sim.agentReceptionist().getLengthOfReceptionQueue().mean() * 100.0) / 100.0;
+        if (sim.currentReplication() == (Integer.parseInt(numberOfReplicationsTextField.getText())-1)){
+            writeResultsToFile(sim);
+        }
         return result;
+    }
+
+    public void writeResultsToFile(Simulation simulator){
+        MySimulation sim = (MySimulation) simulator;
+
+        try (PrintWriter writer = new PrintWriter("results.csv")) {
+
+            StringBuilder sb = new StringBuilder();
+            //hlavicka
+            sb.append("Replikacii");
+            sb.append(',');
+            sb.append("Nazov");
+            sb.append(',');
+            sb.append("Kadernicky");
+            sb.append(',');
+            sb.append("Kozmeticky");
+            sb.append(',');
+            sb.append("Recepcne");
+            sb.append(',');
+            sb.append("Strategia");
+            sb.append(',');
+            sb.append("Pocet radov");
+            sb.append(',');
+            sb.append("Obsluzenych");
+            sb.append(',');
+            sb.append("Odchodov po zatvaracke");
+            sb.append(',');
+            sb.append("Prislo na aute");
+            sb.append(',');
+            sb.append("Nezaparkovalo");
+            sb.append(',');
+            sb.append("Spokojnost s parkovanim");
+            sb.append(',');
+            sb.append("Uspesnost zaparkovania(%)");
+            sb.append(',');
+            sb.append("Cas cakania v rade na objednavku");
+            sb.append(',');
+            sb.append("Priem. cas zak. v systeme");
+            sb.append(',');
+            sb.append("Interval spolahlivosti");
+            sb.append(',');
+            sb.append("Pocet v rade pred recepciou");
+            sb.append(',');
+            sb.append("Pocet v rade pred licenim");
+            sb.append(',');
+            sb.append("Pocet v rade pred ucesom");
+            sb.append(',');
+            sb.append("Priem. cas zak. v systeme(17:00)");
+            sb.append(',');
+            sb.append("Interval spolahlivosti(17:00)");
+            sb.append(',');
+            sb.append("Pocet v rade pred recepciou(17:00)");
+            sb.append('\n');
+
+            //hodnoty
+            sb.append(numberOfReplicationsTextField.getText());
+            sb.append(',');
+            sb.append("KD")
+                    .append(sim.getNumberOfHairstylists())
+                    .append(" KZ")
+                    .append(numberOfMakeupArtistsTextField.getText())
+                    .append(" RC")
+                    .append(numberOfReceptionistsTextField.getText());
+            sb.append(',');
+            sb.append(sim.getNumberOfHairstylists());
+            sb.append(',');
+            sb.append(numberOfMakeupArtistsTextField.getText());
+            sb.append(',');
+            sb.append(numberOfReceptionistsTextField.getText());
+            sb.append(',');
+            sb.append(parkingStrategyCombobox.getSelectedIndex()+1);
+            sb.append(',');
+            sb.append(numberOfParkingLinesComboBox.getSelectedIndex()+1);
+            sb.append(',');
+            sb.append(Math.round(sim.getServedCustomers().mean() * 100.0) / 100.0);
+            sb.append(',');
+            sb.append(Math.round(sim.getLeftAfterClosing().mean() * 100.0) / 100.0);
+            sb.append(',');
+            sb.append(Math.round(sim.getArrivedOnCar().mean() * 100.0) / 100.0);
+            sb.append(',');
+            sb.append(Math.round(sim.getUnsuccessfulParking().mean() * 100.0) / 100.0);
+            sb.append(',');
+            sb.append(Math.round(sim.getCustomersSuccesRates().mean() * 100.0) / 100.0);
+            sb.append(',');
+            sb.append(Math.round(sim.getParkingSuccessRatePercentage().mean() * 100.0) / 100.0);
+            sb.append(',');
+            sb.append(getTotalTimeFromSeconds(sim.getWaitTimeForPlacingOrder().mean()));
+            sb.append(',');
+            sb.append(getTotalTimeFromSeconds(sim.getTimeInSystem().mean()));
+            sb.append(',');
+            sb.append("<")
+                    .append(getTotalTimeFromSeconds(sim.getTimeInSystem().confidenceInterval_90()[0]))
+                    .append("- ")
+                    .append(getTotalTimeFromSeconds(sim.getTimeInSystem().confidenceInterval_90()[1]))
+                    .append(">");
+            sb.append(',');
+            sb.append(Math.round(sim.getLengthOfQueueReception().mean() * 100.0) / 100.0);
+            sb.append(',');
+            sb.append(Math.round(sim.getLengthOfQueueMakeUp().mean() * 100.0) / 100.0);
+            sb.append(',');
+            sb.append(Math.round(sim.getLengthOfQueueHairstyle().mean() * 100.0) / 100.0);
+            sb.append(',');
+            sb.append(getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().mean()));
+            sb.append(',');
+            sb.append("<")
+                    .append(getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().confidenceInterval_90()[0]))
+                    .append("- ")
+                    .append(getTotalTimeFromSeconds(sim.getTimeInSystemUntil17().confidenceInterval_90()[1]))
+                    .append(">");
+            sb.append(',');
+            sb.append(Math.round(sim.getLengthOfQueueReceptionUntil17().mean() * 100.0) / 100.0);
+            sb.append('\n');
+
+            writer.write(sb.toString());
+
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void createDatasets(){

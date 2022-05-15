@@ -47,14 +47,6 @@ public class ManagerModel extends Manager
 				message.setAddressee(mySim().findAgent(Id.agentBeautySalon));
 				request(message);
 			}
-			//toto bolo len pre fungovanie bez parkoviska
-			/*if (!customer.isArrivedOnCar()) {
-				myAgent().addCustomerToStats();
-				myAgent().getListOfCustomersInSystem().add(customer);
-				message.setCode(Mc.serveCustomer);
-				message.setAddressee(mySim().findAgent(Id.agentBeautySalon));
-				request(message);
-			}*/
 		}
 	}
 
