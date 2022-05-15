@@ -90,7 +90,6 @@ public class BeautySalonGui implements ISimDelegate{
         simulator = new MySimulation();
         simulator.setTypeOfSimulation(TypeOfSimulation.OBSERVE);
 
-        //TODO toto sa ani nepouziva
         simulator.setDeltaT(400);
         simulator.setSleepLength(400);
         simulator.registerDelegate(this);
@@ -563,7 +562,7 @@ public class BeautySalonGui implements ISimDelegate{
                 ">\n    Priemerny pocet v rade pred recepciou: " +
                 Math.round(sim.getLengthOfQueueReceptionUntil17().mean() * 100.0) / 100.0;
         //pre poslednu replikaciu
-        result += "\nPosledna replikacia(celkovy cas): \n";
+        result += "\n\nPosledna replikacia(celkovy cas): \n";
         result += "  Priemerny cas zakaznika v systeme: "
                 + getTotalTimeFromSeconds(sim.agentBeautySalon().getTimeInSystem().mean())
                 + "\n  " + sim.agentBeautySalon().getNumberOfServedCustomers() + " obsluzenych zakaznikov";

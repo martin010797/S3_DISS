@@ -41,8 +41,17 @@ public class AgentEnviroment extends Agent
 	}
 
 	private void prepareGenerators(){
+		//9.6 pre 20 percentne navysenie zakaznikov
+		//carArrivalsGenerator = new ExponentialRNG((double) (3600/9.6), new Random(seedGenerator.nextInt()));
+
 		carArrivalsGenerator = new ExponentialRNG((double) (3600/8), new Random(seedGenerator.nextInt()));
+
+		//6 pre 20 percentne navysenie zakaznikov
+		//footArrivalsGenerator = new ExponentialRNG((double) (3600/6), new Random(seedGenerator.nextInt()));
+
 		footArrivalsGenerator = new ExponentialRNG((double) (3600/5), new Random(seedGenerator.nextInt()));
+
+		//pre verifikaciu so sem 2
 		//footArrivalsGenerator = new ExponentialRNG((double) (3600/8), new Random(seedGenerator.nextInt()));
 	}
 

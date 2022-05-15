@@ -2,6 +2,46 @@
 <ABAsim>
   <Agents>
     <Agent>
+      <SimId>7</SimId>
+      <InternalId>26</InternalId>
+      <Name>AgentBeautySalon</Name>
+      <Bounds>1306,684,180,180</Bounds>
+      <Reasoner>ManagerBeautySalon</Reasoner>
+      <ReasonerBounds>73,26,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+      <Components>
+        <Process>
+          <SimId>1016</SimId>
+          <InternalId>146</InternalId>
+          <Name>ProcessClosing</Name>
+          <Bounds>73,91,35,18</Bounds>
+        </Process>
+      </Components>
+    </Agent>
+    <Agent>
+      <SimId>11</SimId>
+      <InternalId>36</InternalId>
+      <Name>AgentMakeUpArtist</Name>
+      <Bounds>2221,1057,180,180</Bounds>
+      <Reasoner>ManagerMakeUpArtist</Reasoner>
+      <ReasonerBounds>74,25,32,25</ReasonerBounds>
+      <UsePetriNet>false</UsePetriNet>
+      <Components>
+        <Process>
+          <SimId>1011</SimId>
+          <InternalId>62</InternalId>
+          <Name>ProcessMakeUp</Name>
+          <Bounds>107,87,35,18</Bounds>
+        </Process>
+        <Process>
+          <SimId>1010</SimId>
+          <InternalId>60</InternalId>
+          <Name>ProcessSkinCleaning</Name>
+          <Bounds>47,90,35,18</Bounds>
+        </Process>
+      </Components>
+    </Agent>
+    <Agent>
       <SimId>10</SimId>
       <InternalId>35</InternalId>
       <Name>AgentHairstylist</Name>
@@ -28,29 +68,14 @@
       <UsePetriNet>false</UsePetriNet>
     </Agent>
     <Agent>
-      <SimId>7</SimId>
-      <InternalId>26</InternalId>
-      <Name>AgentBeautySalon</Name>
-      <Bounds>1306,684,180,180</Bounds>
-      <Reasoner>ManagerBeautySalon</Reasoner>
-      <ReasonerBounds>73,26,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
-    </Agent>
-    <Agent>
       <SimId>8</SimId>
       <InternalId>30</InternalId>
       <Name>AgentParking</Name>
-      <Bounds>847,717,180,180</Bounds>
+      <Bounds>847,714,180,180</Bounds>
       <Reasoner>ManagerParking</Reasoner>
       <ReasonerBounds>74,25,32,25</ReasonerBounds>
       <UsePetriNet>false</UsePetriNet>
       <Components>
-        <Process>
-          <SimId>1014</SimId>
-          <InternalId>133</InternalId>
-          <Name>ProcessToEntrance</Name>
-          <Bounds>37,118,35,18</Bounds>
-        </Process>
         <Process>
           <SimId>1013</SimId>
           <InternalId>131</InternalId>
@@ -64,45 +89,22 @@
           <Bounds>9,64,35,18</Bounds>
         </Process>
         <Process>
+          <SimId>1014</SimId>
+          <InternalId>133</InternalId>
+          <Name>ProcessToEntrance</Name>
+          <Bounds>53,114,35,18</Bounds>
+        </Process>
+        <Process>
           <SimId>1015</SimId>
           <InternalId>135</InternalId>
           <Name>ProcessFromEntranceToCar</Name>
-          <Bounds>82,124,35,18</Bounds>
-        </Process>
-        <Process>
-          <SimId>1005</SimId>
-          <InternalId>44</InternalId>
-          <Name>ProcessParking</Name>
-          <Bounds>126,103,35,18</Bounds>
+          <Bounds>101,112,35,18</Bounds>
         </Process>
         <Process>
           <SimId>1006</SimId>
           <InternalId>49</InternalId>
           <Name>ProcessLeaving</Name>
           <Bounds>135,71,35,18</Bounds>
-        </Process>
-      </Components>
-    </Agent>
-    <Agent>
-      <SimId>11</SimId>
-      <InternalId>36</InternalId>
-      <Name>AgentMakeUpArtist</Name>
-      <Bounds>2221,1057,180,180</Bounds>
-      <Reasoner>ManagerMakeUpArtist</Reasoner>
-      <ReasonerBounds>74,25,32,25</ReasonerBounds>
-      <UsePetriNet>false</UsePetriNet>
-      <Components>
-        <Process>
-          <SimId>1010</SimId>
-          <InternalId>60</InternalId>
-          <Name>ProcessSkinCleaning</Name>
-          <Bounds>47,90,35,18</Bounds>
-        </Process>
-        <Process>
-          <SimId>1011</SimId>
-          <InternalId>62</InternalId>
-          <Name>ProcessMakeUp</Name>
-          <Bounds>107,87,35,18</Bounds>
         </Process>
       </Components>
     </Agent>
@@ -257,6 +259,12 @@
       <Destination>36</Destination>
     </Message>
     <Message>
+      <InternalId>147</InternalId>
+      <Type>StartFinish</Type>
+      <Source>26</Source>
+      <Destination>146</Destination>
+    </Message>
+    <Message>
       <InternalId>22</InternalId>
       <Type>StartFinish</Type>
       <Source>2</Source>
@@ -347,12 +355,6 @@
       <Destination>26</Destination>
     </Message>
     <Message>
-      <InternalId>45</InternalId>
-      <Type>StartFinish</Type>
-      <Source>30</Source>
-      <Destination>44</Destination>
-    </Message>
-    <Message>
       <SimId>1022</SimId>
       <InternalId>110</InternalId>
       <Name>NumberOfCustomersInQueues</Name>
@@ -425,12 +427,6 @@
       <Destination>57</Destination>
     </Message>
     <Message>
-      <InternalId>61</InternalId>
-      <Type>StartFinish</Type>
-      <Source>36</Source>
-      <Destination>60</Destination>
-    </Message>
-    <Message>
       <SimId>1028</SimId>
       <InternalId>125</InternalId>
       <Name>ClosingSalon</Name>
@@ -439,11 +435,17 @@
       <Destination>34</Destination>
     </Message>
     <Message>
+      <InternalId>61</InternalId>
+      <Type>StartFinish</Type>
+      <Source>36</Source>
+      <Destination>60</Destination>
+    </Message>
+    <Message>
       <InternalId>63</InternalId>
       <Type>StartFinish</Type>
       <Source>36</Source>
       <Destination>62</Destination>
     </Message>
   </Messages>
-  <IID>137</IID>
+  <IID>148</IID>
 </ABAsim>

@@ -48,6 +48,7 @@ public class ManagerEnviroment extends Manager
 		messageOnFoot.setAddressee(myAgent().findAssistant(Id.schedulerOfArrivalsOnFoot));
 		startContinualAssistant(messageOnFoot);
 		//prichody autom
+		//pre verifikaciu zakomentovat
 		MyMessage messageOnCar = new MyMessage(mySim());
 		messageOnCar.setAddressee(myAgent().findAssistant(Id.schedulerOfArrivalsOnCar));
 		startContinualAssistant(messageOnCar);
